@@ -710,3 +710,397 @@ export const App: React.FC = () => {
     </div>
   );
 };
+import React, { useState, useEffect, useRef } from 'react';
+
+// --- TYPES ---
+export interface CountryProfile {
+  name: string;
+  code: string;
+  threatLevel: 'LOW' | 'MODERATE' | 'ELEVATED' | 'CRITICAL';
+  reversibility: 'R0' | 'R1' | 'R2' | 'R3' | 'R4';
+  inflationRate: string;   // e.g. "3.2%"
+  affordabilityIndex: string; // e.g. "68.4 / 100 (Moderate)"
+  exports: string;        // What it sells
+  imports: string;        // What it buys
+  keyPartners: string;
+  activeEvents: number;
+}
+
+export interface Message {
+  id: string;
+  sender: 'JIMMY' | 'USER';
+  text: string;
+  timestamp: string;
+}
+
+// --- COUNTRY DATABASE WITH INFLATION & AFFORDABILITY ---
+const COUNTRY_DATABASE: Record<string, CountryProfile> = {
+  USA: {
+    name: 'United States',
+    code: 'USA',
+    threatLevel: 'MODERATE',
+    reversibility: 'R1',
+    inflationRate: '2.9% Annual CPI',
+    affordabilityIndex: '72.1 / 100 (High Purchasing Power)',
+    exports: 'Refined Petroleum, Aircraft, Integrated Circuits, Soybeans, Medical Devices',
+    imports: 'Consumer Electronics, Automobiles, Crude Oil, Pharmaceuticals, Machinery',
+    keyPartners: 'Canada, Mexico, China, Japan, Germany',
+    activeEvents: 4,
+  },
+  DEU: {
+    name: 'Germany',
+    code: 'DEU',
+    threatLevel: 'ELEVATED',
+    reversibility: 'R2',
+    inflationRate: '2.2% Annual CPI',
+    affordabilityIndex: '68.5 / 100 (Moderate-High)',
+    exports: 'Motor Vehicles, Industrial Machinery, Chemical Products, Pharmaceuticals',
+    imports: 'Natural Gas, Crude Oil, Consumer Electronics, Vehicle Components',
+    keyPartners: 'United States, China, Netherlands, France, Poland',
+    activeEvents: 6,
+  },
+  EGY: {
+    name: 'Egypt (Suez Corridor)',
+    code: 'EGY',
+    threatLevel: 'CRITICAL',
+    reversibility: 'R3',
+    inflationRate: '26.4% Annual CPI (Severe Pressure)',
+    affordabilityIndex: '34.2 / 100 (Low / High Stress)',
+    exports: 'Liquefied Natural Gas, Crude Petroleum, Gold, Fertilizers, Textiles',
+    imports: 'Wheat & Grains, Refined Petroleum, Pharmaceuticals, Telecom Gear',
+    keyPartners: 'United Arab Emirates, Saudi Arabia, Turkey, Italy, India',
+    activeEvents: 9,
+  },
+  SGP: {
+    name: 'Singapore',
+    code: 'SGP',
+    threatLevel: 'ELEVATED',
+    reversibility: 'R1',
+    inflationRate: '2.4% Annual CPI',
+    affordabilityIndex: '81.0 / 100 (High / Stable)',
+    exports: 'Integrated Circuits, Refined Petroleum, Optical Instruments, Financial Services',
+    imports: 'Crude Oil, Semiconductors, Gold, Telecommunications Equipment',
+    keyPartners: 'China, Malaysia, United States, Indonesia, Taiwan',
+    activeEvents: 5,
+  },
+  JPN: {
+    name: 'Japan',
+    code: 'JPN',
+    threatLevel: 'MODERATE',
+    reversibility: 'R1',
+    inflationRate: '2.8% Annual CPI',
+    affordabilityIndex: '74.8 / 100 (Stable)',
+    exports: 'Automobiles, Semiconductor Manufacturing Tools, Steel, Chemicals',
+    imports: 'Liquefied Natural Gas, Crude Oil, Coal, Integrated Circuits, Foodstuffs',
+    keyPartners: 'China, United States, South Korea, Australia, Taiwan',
+    activeEvents: 3,
+  },
+};
+
+export const App: React.FC = () => {
+  const [activeTab, setActiveTab] = useState<'BOARD' | 'OBSERVER' | 'WIRE' | 'TREE' | 'TOWN_HALL' | 'SCORES'>('BOARD');
+  const [selectedCountry, setSelectedCountry] = useState<CountryProfile>(COUNTRY_DATABASE['USA']);
+  const [userInput, setUserInput] = useState<string>('');
+  const [jimmyMessages, setJimmyMessages] = useState<Message[]>([
+    {
+      id: '1',
+      sender: 'JIMMY',
+      text: "Enigma 5789 World Observer online. I'm Jimmy, your cognitive guide. Select any continent or country pin to inspect macroeconomic trade, inflation rates, and purchasing power affordability metrics.",
+      timestamp: '14:30 CT',
+    },
+  ]);
+
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
+
+  // --- GLOBE RENDERER WITH CONTINENT VECTOR PATHS ---
+  useEffect(() => {
+    if (activeTab !== 'BOARD' && activeTab !== 'OBSERVER') return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+    const ctx = canvas.getContext('2d');
+    if (!ctx) return;
+
+    let animationFrameId: number;
+    let rotationAngle = 0;
+
+    const continents = [
+      { name: 'North America', points: [[-1.8, 0.5], [-1.2, 0.4], [-1.1, 0.2], [-1.5, 0.1], [-1.9, 0.3]] },
+      { name: 'South America', points: [[-1.2, -0.1], [-0.9, -0.2], [-1.0, -0.6], [-1.2, -0.4]] },
+      { name: 'Europe', points: [[-0.1, 0.5], [0.3, 0.5], [0.4, 0.3], [0.0, 0.3]] },
+      { name: 'Africa', points: [[0.0, 0.3], [0.4, 0.2], [0.3, -0.3], [-0.1, -0.2]] },
+      { name: 'Asia', points: [[0.5, 0.5], [1.6, 0.4], [1.4, 0.1], [0.6, 0.2]] },
+      { name: 'Japan', points: [[1.7, 0.4], [1.9, 0.3], [1.8, 0.2]] },
+      { name: 'Australia', points: [[1.5, -0.3], [1.9, -0.3], [1.8, -0.6], [1.4, -0.5]] },
+    ];
+
+    const renderGlobe = () => {
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+      const radius = Math.min(centerX, centerY) - 20;
+
+      // Glow Ring
+      const glow = ctx.createRadialGradient(centerX, centerY, radius * 0.8, centerX, centerY, radius * 1.2);
+      glow.addColorStop(0, 'rgba(212, 175, 55, 0.15)');
+      glow.addColorStop(1, 'rgba(0, 0, 0, 0)');
+      ctx.fillStyle = glow;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius * 1.2, 0, Math.PI * 2);
+      ctx.fill();
+
+      // Sphere Base
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, radius, 0, Math.PI * 2);
+      ctx.fillStyle = '#0f110d';
+      ctx.fill();
+      ctx.strokeStyle = '#d4af37';
+      ctx.lineWidth = 1.5;
+      ctx.stroke();
+
+      rotationAngle += 0.004;
+
+      // Render Continents
+      continents.forEach((cont) => {
+        ctx.beginPath();
+        let first = true;
+
+        cont.points.forEach(([lonOffset, latOffset]) => {
+          const angle = rotationAngle + lonOffset;
+          const z = radius * Math.cos(angle);
+
+          if (z > -radius * 0.2) {
+            const x = centerX + radius * Math.sin(angle) * Math.cos(latOffset);
+            const y = centerY - radius * Math.sin(latOffset);
+
+            if (first) {
+              ctx.moveTo(x, y);
+              first = false;
+            } else {
+              ctx.lineTo(x, y);
+            }
+          }
+        });
+
+        ctx.closePath();
+        ctx.fillStyle = 'rgba(212, 175, 55, 0.22)';
+        ctx.fill();
+        ctx.strokeStyle = '#d4af37';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+      });
+
+      // Render Country Pins
+      Object.values(COUNTRY_DATABASE).forEach((country) => {
+        let lonOffset = 0.2;
+        let latOffset = 0.0;
+
+        if (country.code === 'USA') { lonOffset = -1.5; latOffset = 0.35; }
+        if (country.code === 'DEU') { lonOffset = 0.1; latOffset = 0.45; }
+        if (country.code === 'EGY') { lonOffset = 0.2; latOffset = 0.0; }
+        if (country.code === 'SGP') { lonOffset = 1.2; latOffset = -0.2; }
+        if (country.code === 'JPN') { lonOffset = 1.8; latOffset = 0.35; }
+
+        const angle = rotationAngle + lonOffset;
+        const z = radius * Math.cos(angle);
+
+        if (z > 0) {
+          const px = centerX + radius * Math.sin(angle) * Math.cos(latOffset);
+          const py = centerY - radius * Math.sin(latOffset);
+          const isSelected = selectedCountry.code === country.code;
+
+          ctx.beginPath();
+          ctx.arc(px, py, isSelected ? 8 : 5, 0, Math.PI * 2);
+          ctx.strokeStyle = isSelected ? '#ffffff' : '#d4af37';
+          ctx.lineWidth = isSelected ? 2 : 1;
+          ctx.stroke();
+
+          ctx.fillStyle = isSelected ? '#ffffff' : '#d4af37';
+          ctx.beginPath();
+          ctx.moveTo(px, py - 5);
+          ctx.lineTo(px + 4, py + 3);
+          ctx.lineTo(px - 4, py + 3);
+          ctx.closePath();
+          ctx.fill();
+
+          ctx.font = '10px monospace';
+          ctx.fillStyle = isSelected ? '#ffffff' : '#e5c052';
+          ctx.fillText(country.code, px + 8, py + 3);
+        }
+      });
+
+      animationFrameId = requestAnimationFrame(renderGlobe);
+    };
+
+    renderGlobe();
+    return () => cancelAnimationFrame(animationFrameId);
+  }, [activeTab, selectedCountry]);
+
+  const handleJimmySend = () => {
+    if (!userInput.trim()) return;
+    const timeStr = new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' CT';
+    const newMsg: Message = { id: String(Date.now()), sender: 'USER', text: userInput, timestamp: timeStr };
+    setJimmyMessages(prev => [...prev, newMsg]);
+    setUserInput('');
+
+    setTimeout(() => {
+      setJimmyMessages(prev => [
+        ...prev,
+        {
+          id: String(Date.now() + 1),
+          sender: 'JIMMY',
+          text: `Logged inquiry regarding ${selectedCountry.name}. Inflation (${selectedCountry.inflationRate}) and Affordability Index (${selectedCountry.affordabilityIndex}) mapped into economic drawer.`,
+          timestamp: new Date().toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' }) + ' CT',
+        },
+      ]);
+    }, 700);
+  };
+
+  return (
+    <div style={{ background: '#0d0f0c', color: '#c9cebe', minHeight: '100vh', fontFamily: 'Georgia, serif', display: 'flex', flexDirection: 'column' }}>
+      
+      {/* HEADER */}
+      <header style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center', padding: '12px 16px', background: '#121511', borderBottom: '2px solid #2e332b' }}>
+        <div>
+          <h1 style={{ margin: 0, fontSize: '20px', color: '#d4af37', fontFamily: 'Georgia, serif' }}>
+            Enigma<span style={{ color: '#e5c052' }}>5789</span> <span style={{ fontSize: '11px', color: '#8e9388', fontFamily: 'monospace' }}>// MACROECONOMIC OBSERVER</span>
+          </h1>
+        </div>
+        <div style={{ fontSize: '11px', color: '#a3a89e', fontFamily: 'monospace' }}>2026-10-18 CT</div>
+      </header>
+
+      {/* TOP TAB NAV */}
+      <nav style={{ display: 'flex', gap: '6px', padding: '10px 16px 4px 16px', overflowX: 'auto', background: '#0d0f0c' }}>
+        {['BOARD', 'OBSERVER', 'WIRE', 'PLAYERS', 'TREE', 'TOWN_HALL', 'SCORES'].map((tab) => (
+          <button
+            key={tab}
+            onClick={() => setActiveTab(tab as any)}
+            style={{
+              background: activeTab === tab ? '#d4af37' : '#151814',
+              color: activeTab === tab ? '#121411' : '#c9cebe',
+              border: `1px solid ${activeTab === tab ? '#e5c052' : '#2d3328'}`,
+              borderRadius: '5px',
+              padding: '6px 12px',
+              cursor: 'pointer',
+              fontFamily: 'monospace',
+              fontSize: '11px',
+              fontWeight: activeTab === tab ? 'bold' : 'normal',
+              whiteSpace: 'nowrap',
+            }}
+          >
+            {tab}
+          </button>
+        ))}
+      </nav>
+
+      {/* MAIN LAYOUT */}
+      <div style={{ flex: 1, display: 'flex', padding: '12px 16px', gap: '12px', flexWrap: 'wrap' }}>
+        
+        {/* GLOBE DISPLAY */}
+        <main style={{ flex: '2 1 320px', minWidth: '280px', background: '#121511', border: '1px solid #222820', borderRadius: '8px', padding: '14px', display: 'flex', flexDirection: 'column' }}>
+          <div style={{ fontSize: '10px', color: '#8e9388', fontFamily: 'monospace', letterSpacing: '1px', marginBottom: '8px', display: 'flex', justifyContent: 'space-between' }}>
+            <span>CONTINENTAL VECTOR GLOBE</span>
+            <span style={{ color: '#d4af37' }}>Tap sphere to cycle country profiles</span>
+          </div>
+
+          <div style={{ flex: 1, display: 'flex', justifyContent: 'center', alignItems: 'center', background: '#070806', borderRadius: '6px', border: '1px solid #1c221b', padding: '8px', minHeight: '250px' }}>
+            <canvas
+              ref={canvasRef}
+              width={360}
+              height={260}
+              onClick={() => {
+                const keys = Object.keys(COUNTRY_DATABASE);
+                const nextKey = keys[(keys.indexOf(selectedCountry.code) + 1) % keys.length];
+                setSelectedCountry(COUNTRY_DATABASE[nextKey]);
+              }}
+              style={{ maxWidth: '100%', cursor: 'pointer' }}
+            />
+          </div>
+        </main>
+
+        {/* DETAILED COUNTRY ECONOMIC & AFFORDABILITY DRAWER */}
+        <aside style={{ flex: '1 1 240px', minWidth: '240px', background: '#121511', border: '1px solid #222820', borderRadius: '8px', padding: '12px', display: 'flex', flexDirection: 'column', gap: '8px', fontFamily: 'monospace' }}>
+          <div style={{ borderBottom: '1px solid #222820', paddingBottom: '6px' }}>
+            <div style={{ fontSize: '9px', color: '#8e9388' }}>COUNTRY ECONOMIC DRAWER</div>
+            <h4 style={{ margin: '2px 0 0 0', color: '#d4af37', fontSize: '14px' }}>{selectedCountry.name} ({selectedCountry.code})</h4>
+          </div>
+
+          <div style={{ background: '#070806', padding: '6px 8px', borderRadius: '4px', border: '1px solid #1c221b' }}>
+            <span style={{ fontSize: '9px', color: '#8e9388' }}>INFLATION RATE (CPI)</span>
+            <p style={{ margin: '2px 0 0 0', color: '#f87171', fontWeight: 'bold', fontSize: '11px' }}>
+              📈 {selectedCountry.inflationRate}
+            </p>
+          </div>
+
+          <div style={{ background: '#070806', padding: '6px 8px', borderRadius: '4px', border: '1px solid #1c221b' }}>
+            <span style={{ fontSize: '9px', color: '#8e9388' }}>AFFORDABILITY INDEX</span>
+            <p style={{ margin: '2px 0 0 0', color: '#38bdf8', fontWeight: 'bold', fontSize: '11px' }}>
+              💳 {selectedCountry.affordabilityIndex}
+            </p>
+          </div>
+
+          <div style={{ fontSize: '10px', color: '#c9cebe', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            <div>
+              <strong style={{ color: '#4ade80' }}>📦 EXPORTS (What it Sells):</strong><br />
+              <span style={{ color: '#8e9388' }}>{selectedCountry.exports}</span>
+            </div>
+
+            <div>
+              <strong style={{ color: '#38bdf8' }}>🛒 IMPORTS (What it Buys):</strong><br />
+              <span style={{ color: '#8e9388' }}>{selectedCountry.imports}</span>
+            </div>
+
+            <div>
+              <strong style={{ color: '#d4af37' }}>🤝 KEY TRADE PARTNERS:</strong><br />
+              <span style={{ color: '#8e9388' }}>{selectedCountry.keyPartners}</span>
+            </div>
+          </div>
+        </aside>
+
+        {/* JIMMY AI ASSISTANT SIDEBAR */}
+        <aside style={{ flex: '1 1 240px', minWidth: '240px', background: '#121511', border: '1px solid #222820', borderRadius: '8px', display: 'flex', flexDirection: 'column', overflow: 'hidden', fontFamily: 'monospace', maxHeight: '420px' }}>
+          <div style={{ padding: '8px 10px', background: '#1a1d18', borderBottom: '1px solid #222820', display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+            <span style={{ fontWeight: 'bold', fontSize: '11px', color: '#d4af37' }}>🤖 JIMMY ENGINE</span>
+            <span style={{ fontSize: '9px', background: '#222820', color: '#d4af37', padding: '2px 5px', borderRadius: '3px' }}>ONLINE</span>
+          </div>
+
+          <div style={{ flex: 1, padding: '8px', overflowY: 'auto', display: 'flex', flexDirection: 'column', gap: '6px' }}>
+            {jimmyMessages.map((m) => (
+              <div
+                key={m.id}
+                style={{
+                  alignSelf: m.sender === 'USER' ? 'flex-end' : 'flex-start',
+                  background: m.sender === 'USER' ? '#222820' : '#070806',
+                  color: '#c9cebe',
+                  padding: '6px 8px',
+                  borderRadius: '4px',
+                  fontSize: '10px',
+                  lineHeight: '1.4',
+                  maxWidth: '92%',
+                  border: m.sender === 'JIMMY' ? '1px solid #1c221b' : 'none',
+                }}
+              >
+                {m.text}
+              </div>
+            ))}
+          </div>
+
+          <div style={{ padding: '6px', borderTop: '1px solid #222820', display: 'flex', gap: '4px', background: '#121511' }}>
+            <input
+              type="text"
+              value={userInput}
+              onChange={(e) => setUserInput(e.target.value)}
+              onKeyDown={(e) => e.key === 'Enter' && handleJimmySend()}
+              placeholder="Ask Jimmy or log hypothesis..."
+              style={{ flex: 1, background: '#070806', color: '#fff', border: '1px solid #222820', borderRadius: '4px', padding: '5px', fontSize: '10px', outline: 'none' }}
+            />
+            <button onClick={handleJimmySend} style={{ background: '#d4af37', color: '#121411', border: 'none', borderRadius: '4px', padding: '5px 8px', fontWeight: 'bold', cursor: 'pointer', fontSize: '10px' }}>
+              Send
+            </button>
+          </div>
+        </aside>
+
+      </div>
+    </div>
+  );
+};
+                       
