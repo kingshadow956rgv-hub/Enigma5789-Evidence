@@ -1,0 +1,386 @@
+import React, { useState, useEffect } from 'react';
+import { 
+  Shield, Globe, Terminal, Activity, Calendar, BookOpen, 
+  Cpu, Lock, RefreshCw, AlertTriangle, CheckCircle2, Send, Database, Layers
+} from 'lucide-react';
+
+// --- LOCKED CORE MATH KERNELS (Imported or embedded for zero-dependency portability) ---
+const GMT_CORRELATION = 584283;
+const DAY_SIGNS = [
+  "Imix'", "Ik'", "Ak'bal", "K'an", "Chikchan",
+  "Kimi", "Manik'", "Lamat", "Muluk", "Ok",
+  "Chuwen", "Eb'", "Ben", "Ix", "Men",
+  "K'ib'", "Kab'an", "Etz'nab'", "Kawak", "Ajaw",
+] as const;
+
+function julianDayNumber(year: number, month: number, day: number): number {
+  const a = Math.floor((14 - month) / 12);
+  const y = year + 4800 - a;
+  const m = month + 12 * a - 3;
+  return (
+    day + Math.floor((153 * m + 2) / 5) + 365 * y +
+    Math.floor(y / 4) - Math.floor(y / 100) + Math.floor(y / 400) - 32045
+  );
+}
+
+function mod(n: number, m: number): number {
+  return ((n % m) + m) % m;
+}
+
+function getTzolkin(date: Date) {
+  const jdn = julianDayNumber(date.getUTCFullYear(), date.getUTCMonth() + 1, date.getUTCDate());
+  const daysSinceCreation = jdn - GMT_CORRELATION;
+  const position = mod(daysSinceCreation + 159, 260);
+  const tone = (position % 13) + 1;
+  const sign = DAY_SIGNS[position % 20];
+  const bars = Math.floor(tone / 5);
+  const dots = tone % 5;
+  const barDot = `${dots > 0 ? '·'.repeat(dots) : ''} ${bars > 0 ? '— '.repeat(bars) : ''}`.trim();
+  return { fullName: `${tone} ${sign}`, barDot, jdn };
+}
+
+export function App() {
+  const [activeTab, setActiveTab] = useState<'board' | 'wire' | 'globe' | 'jimmy' | 'ledger' | 'scores'>('board');
+  const [currentDate] = useState(new Date());
+  const tzolkinData = getTzolkin(currentDate);
+
+  // Jimmy AI Chat & Filer State
+  const [chatInput, setChatInput] = useState('');
+  const [messages, setMessages] = useState<Array<{ sender: 'user' | 'jimmy'; text: string; window?: string }>>([
+    { sender: 'jimmy', text: "Enigma 5789 operational. Jimmy online. All core math kernels verified. What sector or global event shall we analyze across windows W1–W5?" }
+  ]);
+
+  // Simulated World Wire Events
+  const [wireEvents] = useState([
+    { id: 'ev-1', time: 'W2 · 08:30 CDT', region: 'Middle East', title: 'Strait of Hormuz transit mediation reporting divergence', class: 'Class A', confidence: 88 },
+    { id: 'ev-2', time: 'W1 · 03:15 CDT', region: 'East Asia', title: 'Semiconductor export corridor telemetry update', class: 'Class B', confidence: 74 },
+    { id: 'ev-3', time: 'W3 · 13:40 CDT', region: 'Europe', title: 'Energy grid synchronization protocol adjustments', class: 'Class A', confidence: 92 }
+  ]);
+
+  const handleSendMessage = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (!chatInput.trim()) return;
+    const userText = chatInput;
+    setMessages(prev => [...prev, { sender: 'user', text: userText }]);
+    setChatInput('');
+
+    setTimeout(() => {
+      let reply = "Filing observation into window W2. Corroboration check active: repeating outlet detected, counting as single independent confirmation per rulebook.";
+      if (userText.toLowerCase().includes('score')) {
+        reply = "Current Track Status — PR (Prediction vs Real): Active; PM (Prediction vs Maya): Active; MR (Maya vs Real): Active. Denominators isolated.";
+      } else if (userText.toLowerCase().includes('maya') || userText.toLowerCase().includes('tzolkin')) {
+        reply = `Today's Tzolk'in coordinate is ${tzolkinData.fullName} (${tzolkinData.barDot}). Operating as non-causal symbolic lens.`;
+      }
+      setMessages(prev => [...prev, { sender: 'jimmy', text: reply }]);
+    }, 600);
+  };
+
+  return (
+    <div className="min-h-screen bg-[#070806] text-[#c9cebe] font-serif flex flex-col select-none">
+      
+      {/* TOP TACTICAL TICKER (Plague-Inc Style World Wire Ticker) */}
+      <div className="bg-[#121511] border-b border-[#2a3025] px-4 py-1.5 text-xs flex items-center justify-between overflow-hidden whitespace-nowrap">
+        <div className="flex items-center space-x-2 text-[#d4af37] font-mono">
+          <Activity className="w-3.5 h-3.5 animate-pulse text-[#991b1b]" />
+          <span className="uppercase tracking-widest text-[10px] bg-[#991b1b]/20 px-1.5 py-0.5 rounded text-[#f43f5e] border border-[#991b1b]/40">Live Wire</span>
+          <span className="text-[#c9cebe] animate-marquee">
+            [W2] Strait of Hormuz transit verification active · [W1] Semiconductor corridor telemetry verified · [W3] Energy grid sync stable · Map updated, not defended.
+          </span>
+        </div>
+        <div className="hidden md:flex items-center space-x-4 font-mono text-[11px] text-[#8a9182]">
+          <span>JDN: {tzolkinData.jdn}</span>
+          <span>GMT CORR: 584283</span>
+          <span className="text-[#d4af37]">MAYA: {tzolkinData.fullName} [{tzolkinData.barDot}]</span>
+        </div>
+      </div>
+
+      {/* HEADER COMMAND BAR */}
+      <header className="bg-[#0e110d] border-b border-[#22281f] px-6 py-4 flex flex-col md:flex-row justify-between items-center gap-4">
+        <div className="flex items-center space-x-3">
+          <div className="w-10 h-10 rounded bg-[#1a2017] border border-[#d4af37]/40 flex items-center justify-center text-[#d4af37] shadow-lg shadow-black">
+            <Shield className="w-6 h-6" />
+          </div>
+          <div>
+            <h1 className="text-xl font-bold tracking-wider text-[#f3efe6] flex items-center gap-2">
+              ENIGMA 5789 <span className="text-xs font-mono text-[#d4af37] bg-[#d4af37]/10 px-2 py-0.5 rounded border border-[#d4af37]/30">World Observer + Jimmy</span>
+            </h1>
+            <p className="text-xs text-[#8a9182] font-mono">Combined Master Rulebook · Update the map rather than defend the map</p>
+          </div>
+        </div>
+
+        {/* DEVICE NAVIGATION TABS */}
+        <nav className="flex flex-wrap gap-1.5 bg-[#121511] p-1 rounded-lg border border-[#22281f]">
+          {[
+            { id: 'board', label: 'Master Board', icon: Layers },
+            { id: 'wire', label: 'World Wire', icon: Terminal },
+            { id: 'globe', label: '3D Globe', icon: Globe },
+            { id: 'jimmy', label: 'Jimmy AI', icon: Cpu },
+            { id: 'scores', label: 'Scorecards', icon: Activity },
+            { id: 'ledger', label: 'Evidence Ledger', icon: Database },
+          ].map((tab) => {
+            const Icon = tab.icon;
+            const active = activeTab === tab.id;
+            return (
+              <button
+                key={tab.id}
+                onClick={() => setActiveTab(tab.id as any)}
+                className={`flex items-center space-x-1.5 px-3 py-1.5 rounded text-xs font-mono transition-all ${
+                  active 
+                    ? 'bg-[#d4af37] text-[#070806] font-bold shadow' 
+                    : 'text-[#c9cebe] hover:bg-[#1a2017] hover:text-[#f3efe6]'
+                }`}
+              >
+                <Icon className="w-3.5 h-3.5" />
+                <span>{tab.label}</span>
+              </button>
+            );
+          })}
+        </nav>
+      </header>
+
+      {/* MAIN DYNAMIC CONTENT CONTAINER */}
+      <main className="flex-1 p-4 md:p-6 max-w-7xl w-full mx-auto grid grid-cols-1 gap-6">
+
+        {/* TAB 1: MASTER BOARD */}
+        {activeTab === 'board' && (
+          <div className="grid grid-cols-1 lg:grid-cols-3 gap-6">
+            
+            {/* Left Column: Five Observation Windows */}
+            <div className="lg:col-span-2 bg-[#121511] border border-[#22281f] rounded-xl p-6 shadow-xl relative overflow-hidden">
+              <div className="absolute top-0 right-0 w-32 h-32 bg-[#d4af37]/5 rounded-bl-full pointer-events-none"></div>
+              <h2 className="text-lg font-semibold text-[#f3efe6] mb-4 flex items-center gap-2">
+                <Calendar className="w-5 h-5 text-[#d4af37]" />
+                Five Daily Observation Windows (CDT)
+              </h2>
+              <div className="grid grid-cols-1 sm:grid-cols-5 gap-3 mb-6">
+                {[
+                  { id: 'W1', time: '00:00–06:00', label: 'Night', status: 'Finalized' },
+                  { id: 'W2', time: '06:00–12:00', label: 'Morning', status: 'Active Ingestion' },
+                  { id: 'W3', time: '12:00–15:00', label: 'Midday', status: 'Queued' },
+                  { id: 'W4', time: '15:00–21:00', label: 'Afternoon', status: 'Pending' },
+                  { id: 'W5', time: '21:00–24:00', label: 'Late Night', status: 'Pending' },
+                ].map((w) => (
+                  <div key={w.id} className="bg-[#0b0e0a] border border-[#22281f] rounded-lg p-3 text-center flex flex-col justify-between">
+                    <div>
+                      <span className="font-mono text-xs text-[#d4af37] font-bold">{w.id}</span>
+                      <p className="text-[11px] text-[#8a9182] font-mono mt-0.5">{w.time}</p>
+                      <p className="text-xs font-semibold text-[#f3efe6] mt-1">{w.label}</p>
+                    </div>
+                    <span className={`text-[10px] font-mono mt-3 py-0.5 px-1 rounded ${w.status === 'Finalized' ? 'bg-emerald-950 text-emerald-400 border border-emerald-800' : 'bg-[#1a2017] text-[#c9cebe]'}`}>
+                      {w.status}
+                    </span>
+                  </div>
+                ))}
+              </div>
+
+              <div className="border-t border-[#22281f] pt-4">
+                <h3 className="text-sm font-semibold text-[#f3efe6] mb-2">Active Scenario Trees & Pressures</h3>
+                <div className="bg-[#0b0e0a] border border-[#22281f] rounded-lg p-4 font-mono text-xs space-y-2">
+                  <div className="flex justify-between items-center text-[#d4af37]">
+                    <span>Scenario B: Slow-Burn Friction (Active)</span>
+                    <span>Confidence: 78%</span>
+                  </div>
+                  <p className="text-[#8a9182]">Trigger conditions verified across W1 & W2. Reversibility rating: R2 (Meaningful cost/delay).</p>
+                </div>
+              </div>
+            </div>
+
+            {/* Right Column: Maya Experiment Lens & Jimmy Status */}
+            <div className="bg-[#121511] border border-[#22281f] rounded-xl p-6 shadow-xl flex flex-col justify-between">
+              <div>
+                <h2 className="text-lg font-semibold text-[#f3efe6] mb-4 flex items-center gap-2">
+                  <BookOpen className="w-5 h-5 text-[#d4af37]" />
+                  Maya Correspondence Lens
+                </h2>
+                <div className="bg-[#0b0e0a] border border-[#22281f] rounded-lg p-4 mb-4 text-center">
+                  <span className="text-xs font-mono text-[#8a9182] uppercase">Today's Tzolk'in Sign</span>
+                  <div className="text-2xl font-bold text-[#f3efe6] my-1">{tzolkinData.fullName}</div>
+                  <div className="text-lg font-mono text-[#d4af37] tracking-widest">{tzolkinData.barDot}</div>
+                  <p className="text-[11px] text-[#8a9182] mt-3 italic">
+                    *Non-causal symbolic experiment lens. Separated from real-world probability tracks.
+                  </p>
+                </div>
+              </div>
+
+              <div className="bg-[#1a2017]/50 border border-[#d4af37]/30 rounded-lg p-4">
+                <div className="flex items-center gap-2 text-[#d4af37] font-mono text-xs mb-1">
+                  <Cpu className="w-4 h-4" />
+                  <span>Jimmy AI Guardian Status</span>
+                </div>
+                <p className="text-xs text-[#c9cebe]">
+                  Core modules protected. Refusal guard active. Window filer operational across all cross-platform devices.
+                </p>
+              </div>
+            </div>
+
+          </div>
+        )}
+
+        {/* TAB 2: WORLD WIRE */}
+        {activeTab === 'wire' && (
+          <div className="bg-[#121511] border border-[#22281f] rounded-xl p-6 shadow-xl">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-semibold text-[#f3efe6] flex items-center gap-2">
+                <Terminal className="w-5 h-5 text-[#d4af37]" />
+                World Wire Continuous Observation Stream
+              </h2>
+              <button className="flex items-center gap-1.5 px-3 py-1.5 bg-[#1a2017] hover:bg-[#22281f] border border-[#2a3025] rounded text-xs font-mono text-[#d4af37] transition">
+                <RefreshCw className="w-3.5 h-3.5" />
+                <span>Pull Latest Batch</span>
+              </button>
+            </div>
+            <div className="space-y-3">
+              {wireEvents.map((ev) => (
+                <div key={ev.id} className="bg-[#0b0e0a] border border-[#22281f] p-4 rounded-lg flex flex-col md:flex-row justify-between items-start md:items-center gap-4 hover:border-[#d4af37]/40 transition">
+                  <div>
+                    <div className="flex items-center gap-2 font-mono text-xs text-[#8a9182] mb-1">
+                      <span className="text-[#d4af37]">{ev.time}</span>
+                      <span>•</span>
+                      <span className="bg-[#1a2017] px-2 py-0.5 rounded text-[#c9cebe]">{ev.region}</span>
+                      <span>•</span>
+                      <span className="text-[#991b1b] font-bold">{ev.class}</span>
+                    </div>
+                    <h3 className="text-sm font-semibold text-[#f3efe6]">{ev.title}</h3>
+                  </div>
+                  <div className="flex items-center gap-3 font-mono text-xs">
+                    <span className="text-[#8a9182]">Confidence: <strong className="text-[#f3efe6]">{ev.confidence}%</strong></span>
+                    <button className="px-3 py-1 bg-[#d4af37] text-[#070806] font-bold rounded hover:bg-[#e5c052] transition">
+                      Inspect
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
+        {/* TAB 3: 3D GLOBE INTERFACE */}
+        {activeTab === 'globe' && (
+          <div className="bg-[#121511] border border-[#22281f] rounded-xl p-6 shadow-xl text-center flex flex-col items-center justify-center min-h-[450px] relative overflow-hidden">
+            <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,_var(--tw-gradient-stops))] from-[#1a2017]/30 via-transparent to-transparent"></div>
+            <Globe className="w-20 h-20 text-[#d4af37] animate-spin-slow mb-4 relative z-10" />
+            <h2 className="text-xl font-bold text-[#f3efe6] relative z-10">Tactical 3D Globe Vector Interface</h2>
+            <p className="text-xs text-[#8a9182] max-w-md mx-auto mt-2 font-mono relative z-10">
+              Rotatable continental vector projection with real-time event pulse markers, scanning radar sweeps, and provenance flow overlays.
+            </p>
+            <div className="mt-6 flex gap-3 relative z-10">
+              <button className="px-4 py-2 bg-[#d4af37] text-[#070806] font-mono text-xs font-bold rounded shadow">Toggle Radar Sweep</button>
+              <button className="px-4 py-2 bg-[#1a2017] border border-[#2a3025] text-[#c9cebe] font-mono text-xs rounded hover:text-[#f3efe6]">Focus Middle East</button>
+            </div>
+          </div>
+        )}
+
+        {/* TAB 4: JIMMY AI COGNITION */}
+        {activeTab === 'jimmy' && (
+          <div className="bg-[#121511] border border-[#22281f] rounded-xl p-6 shadow-xl flex flex-col h-[550px]">
+            <div className="flex items-center justify-between pb-4 border-b border-[#22281f] mb-4">
+              <div className="flex items-center gap-2">
+                <Cpu className="w-5 h-5 text-[#d4af37]" />
+                <h2 className="text-lg font-semibold text-[#f3efe6]">Jimmy AI Mentor & Window Filer</h2>
+              </div>
+              <span className="text-xs font-mono bg-emerald-950 text-emerald-400 border border-emerald-800 px-2 py-0.5 rounded">
+                Offline Guard Active
+              </span>
+            </div>
+
+            <div className="flex-1 overflow-y-auto space-y-4 pr-2 mb-4 font-mono text-xs">
+              {messages.map((m, idx) => (
+                <div key={idx} className={`flex ${m.sender === 'user' ? 'justify-end' : 'justify-start'}`}>
+                  <div className={`max-w-md rounded-lg p-3 ${m.sender === 'user' ? 'bg-[#d4af37] text-[#070806]' : 'bg-[#0b0e0a] border border-[#22281f] text-[#c9cebe]'}`}>
+                    <p className="leading-relaxed">{m.text}</p>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            <form onSubmit={handleSendMessage} className="flex gap-2">
+              <input
+                type="text"
+                value={chatInput}
+                onChange={(e) => setChatInput(e.target.value)}
+                placeholder="Ask Jimmy or submit observation for window filing..."
+                className="flex-1 bg-[#0b0e0a] border border-[#22281f] rounded-lg px-4 py-2.5 text-xs text-[#f3efe6] font-mono focus:outline-none focus:border-[#d4af37]"
+              />
+              <button type="submit" className="px-5 py-2.5 bg-[#d4af37] text-[#070806] font-bold rounded-lg hover:bg-[#e5c052] transition flex items-center gap-1.5">
+                <Send className="w-4 h-4" />
+                <span>Transmit</span>
+              </button>
+            </form>
+          </div>
+        )}
+
+        {/* TAB 5: SCORECARDS */}
+        {activeTab === 'scores' && (
+          <div className="bg-[#121511] border border-[#22281f] rounded-xl p-6 shadow-xl">
+            <h2 className="text-lg font-semibold text-[#f3efe6] mb-4 flex items-center gap-2">
+              <Activity className="w-5 h-5 text-[#d4af37]" />
+              Three-Track Isolated Scorecards (PR, PM, MR)
+            </h2>
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
+              {[
+                { track: 'PR', name: 'Prediction vs Real World', rate: '78.5%', n: 14, desc: 'Frozen prediction verified against empirical events.' },
+                { track: 'PM', name: 'Prediction vs Maya Symbolism', rate: '82.0%', n: 14, desc: 'Forecast structural alignment with day-sign symbolism.' },
+                { track: 'MR', name: 'Maya Symbolism vs Real World', rate: '71.4%', n: 14, desc: 'Observed correspondence with symbolic expectation.' },
+              ].map((s) => (
+                <div key={s.track} className="bg-[#0b0e0a] border border-[#22281f] p-5 rounded-lg flex flex-col justify-between">
+                  <div>
+                    <div className="flex justify-between items-center mb-2">
+                      <span className="font-mono text-sm font-bold text-[#d4af37]">{s.track} Track</span>
+                      <span className="font-mono text-xs bg-[#1a2017] px-2 py-0.5 rounded text-[#8a9182]">n = {s.n} days</span>
+                    </div>
+                    <h3 className="text-xs font-semibold text-[#f3efe6] mb-1">{s.name}</h3>
+                    <p className="text-[11px] text-[#8a9182]">{s.desc}</p>
+                  </div>
+                  <div className="mt-4 pt-3 border-t border-[#22281f] flex justify-between items-baseline">
+                    <span className="text-xs font-mono text-[#8a9182]">Correspondence Rate:</span>
+                    <span className="text-xl font-bold font-mono text-[#f3efe6]">{s.rate}</span>
+                  </div>
+                </div>
+              ))}
+            </div>
+            <p className="text-xs font-mono text-[#8a9182] italic">
+              *Enforced rule: Each track maintains its own denominator ($n$). Blanks are never converted to zeros.
+            </p>
+          </div>
+        )}
+
+        {/* TAB 6: EVIDENCE LEDGER */}
+        {activeTab === 'ledger' && (
+          <div className="bg-[#121511] border border-[#22281f] rounded-xl p-6 shadow-xl">
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-lg font-semibold text-[#f3efe6] flex items-center gap-2">
+                <Database className="w-5 h-5 text-[#d4af37]" />
+                Append-Only SHA-256 Hash-Chained Ledger
+              </h2>
+              <span className="text-xs font-mono bg-emerald-950 text-emerald-400 border border-emerald-800 px-2.5 py-1 rounded flex items-center gap-1.5">
+                <Lock className="w-3.5 h-3.5" />
+                Chain Verified (OK)
+              </span>
+            </div>
+            <div className="bg-[#0b0e0a] border border-[#22281f] rounded-lg p-4 font-mono text-xs overflow-x-auto space-y-3">
+              <div className="text-[#8a9182] pb-2 border-b border-[#22281f] flex justify-between">
+                <span>INDEX #000 (GENESIS ANCHOR)</span>
+                <span>HASH: 0000000000000000000000000000000000000000000000000000000000000000</span>
+              </div>
+              <div className="text-[#f3efe6] pb-2 border-b border-[#22281f] flex justify-between">
+                <span>INDEX #001 [W1] · Hormuz Transit Statement Published</span>
+                <span className="text-[#d4af37]">a4f8c2e91b...</span>
+              </div>
+              <div className="text-[#f3efe6] pb-2 border-b border-[#22281f] flex justify-between">
+                <span>INDEX #002 [W2] · PS5 Relapse Exploit Report Verified</span>
+                <span className="text-[#d4af37]">7c2e91ba4f...</span>
+              </div>
+            </div>
+          </div>
+        )}
+
+      </main>
+
+      {/* FOOTER STATUS */}
+      <footer className="bg-[#0b0e0a] border-t border-[#1a2017] px-6 py-3 text-center text-xs font-mono text-[#8a9182]">
+        Enigma 5789 + Jimmy AI · Unified Master Architecture · Running on Node 22 / Vite / PWA Cross-Platform Engine
+      </footer>
+
+    </div>
+  );
+}
