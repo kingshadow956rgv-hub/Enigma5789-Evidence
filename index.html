@@ -3,201 +3,561 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Enigma 5789 M + Jimmy AI Master Control Panel</title>
-    <!-- Tailwind CSS CDN -->
+    <title>ENIGMA 5789 + JIMMY AI: Codex of Nations Master Platform</title>
     <script src="https://cdn.tailwindcss.com"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+    <script src="https://cdn.jsdelivr.net/npm/lucide@latest/dist/umd/lucide.min.js"></script>
     <style>
-        .tab-content { display: none; }
-        .tab-content.active { display: block; }
+        @import url('https://fonts.googleapis.com/css2?family=Cinzel:wght@400;600;700;900&family=Share+Tech+Mono&family=Inter:wght@300;400;600;700&display=swap');
+
+        :root {
+            --gold: #C5A15B;
+            --gold-light: #E0C078;
+            --gold-dim: #7A6232;
+            --obsidian: #0D0F12;
+            --panel-bg: rgba(18, 22, 28, 0.85);
+            --border-stone: #2A323D;
+            --cyan-glow: #00F0FF;
+            --amber-glow: #FF9900;
+            --rose-glow: #FF2A55;
+            --emerald-glow: #00FF66;
+            --purple-glow: #B026FF;
+        }
+
+        body {
+            background-color: var(--obsidian);
+            color: #D1D5DB;
+            font-family: 'Inter', sans-serif;
+            background-image: 
+                radial-gradient(circle at 50% 0%, rgba(197, 161, 91, 0.08) 0%, transparent 70%),
+                linear-gradient(to bottom, rgba(13, 15, 18, 0.95), rgba(10, 11, 14, 0.98));
+            background-attachment: fixed;
+            overflow-x: hidden;
+        }
+
+        .font-cinzel { font-family: 'Cinzel', serif; }
+        .font-mono-tech { font-family: 'Share Tech Mono', monospace; }
+
+        .gold-border {
+            border: 1px solid var(--gold-dim);
+            box-shadow: 0 0 10px rgba(197, 161, 91, 0.15), inset 0 0 15px rgba(0,0,0,0.8);
+            position: relative;
+        }
+
+        .gold-border::before {
+            content: '';
+            position: absolute;
+            top: -2px; left: -2px; right: -2px; bottom: -2px;
+            background: linear-gradient(135deg, var(--gold) 0%, transparent 40%, transparent 60%, var(--gold-dim) 100%);
+            z-index: -1;
+            opacity: 0.4;
+            border-radius: inherit;
+        }
+
+        .corner-glyph {
+            position: absolute;
+            width: 12px;
+            height: 12px;
+            border: 2px solid var(--gold);
+        }
+        .cg-tl { top: 2px; left: 2px; border-right: none; border-bottom: none; }
+        .cg-tr { top: 2px; right: 2px; border-left: none; border-bottom: none; }
+        .cg-bl { bottom: 2px; left: 2px; border-right: none; border-top: none; }
+        .cg-br { bottom: 2px; right: 2px; border-left: none; border-top: none; }
+
+        .panel-glass {
+            background: var(--panel-bg);
+            backdrop-filter: blur(12px);
+            border: 1px solid rgba(197, 161, 91, 0.2);
+        }
+
+        .tab-btn {
+            transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            position: relative;
+        }
+        .tab-btn.active {
+            color: #FFFFFF;
+            background: linear-gradient(180deg, rgba(197, 161, 91, 0.2) 0%, rgba(18, 22, 28, 0.8) 100%);
+            border-bottom: 2px solid var(--gold);
+            text-shadow: 0 0 8px rgba(197, 161, 91, 0.6);
+        }
+
+        .glyph-decor {
+            letter-spacing: 0.15em;
+            color: var(--gold);
+            opacity: 0.7;
+        }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar { width: 6px; height: 6px; }
+        ::-webkit-scrollbar-track { background: rgba(13, 15, 18, 0.8); }
+        ::-webkit-scrollbar-thumb { background: var(--gold-dim); border-radius: 3px; }
+        ::-webkit-scrollbar-thumb:hover { background: var(--gold); }
+
+        .pulse-amber { animation: pulseAmber 2s infinite; }
+        @keyframes pulseAmber {
+            0%, 100% { opacity: 0.3; transform: scale(1); }
+            50% { opacity: 0.8; transform: scale(1.05); }
+        }
+
+        @keyframes rotateClockwise {
+            from { transform: rotate(0deg); }
+            to { transform: rotate(360deg); }
+        }
+        .rotate-slow { animation: rotateClockwise 60s linear infinite; }
     </style>
 </head>
-<body class="bg-slate-950 text-slate-100 font-sans min-h-screen flex flex-col">
+<body class="min-h-screen flex flex-col justify-between selection:bg-amber-900 selection:text-amber-200">
 
-    <!-- ==================== MASTER NAVBAR ==================== -->
-    <nav class="bg-slate-900 border-b border-slate-800 sticky top-0 z-50 shadow-lg">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex items-center justify-between h-16">
+    <!-- TOP NAVIGATION BAR -->
+    <header class="sticky top-0 z-50 bg-slate-950/90 border-b border-amber-900/40 backdrop-blur-md px-4 lg:px-8 py-3">
+        <div class="max-w-7xl mx-auto flex items-center justify-between">
+            
+            <!-- BRAND LOGO -->
+            <div class="flex items-center space-x-3">
+                <div class="relative w-9 h-9 flex items-center justify-center border border-amber-500/50 bg-amber-950/30 rounded">
+                    <span class="text-amber-400 font-cinzel font-bold text-xl">👁</span>
+                    <div class="absolute -top-1 -right-1 w-2 h-2 bg-amber-400 rounded-full animate-ping"></div>
+                </div>
+                <div>
+                    <h1 class="text-lg font-cinzel font-black tracking-widest text-amber-200">ENIGMA <span class="text-amber-500">5789</span></h1>
+                    <p class="text-[10px] font-mono-tech text-amber-500/70 tracking-wider uppercase">ANALYZE • CONNECT • FORESEE • JIMMY AI</p>
+                </div>
+            </div>
+
+            <!-- DESKTOP NAVIGATION TABS -->
+            <nav class="hidden md:flex space-x-1 lg:space-x-2">
+                <button onclick="switchTab('globe')" id="tab-btn-globe" class="tab-btn active px-3 py-1.5 rounded text-xs font-cinzel font-bold uppercase tracking-wider flex items-center space-x-2">
+                    <span>■</span> <span>Global Globe</span>
+                </button>
+                <button onclick="switchTab('codex')" id="tab-btn-codex" class="tab-btn px-3 py-1.5 rounded text-xs font-cinzel font-bold uppercase tracking-wider flex items-center space-x-2">
+                    <span>■</span> <span>Codex of Nations</span>
+                </button>
+                <button onclick="switchTab('tree')" id="tab-btn-tree" class="tab-btn px-3 py-1.5 rounded text-xs font-cinzel font-bold uppercase tracking-wider flex items-center space-x-2">
+                    <span>■</span> <span>World Tree</span>
+                </button>
+                <button onclick="switchTab('maya')" id="tab-btn-maya" class="tab-btn px-3 py-1.5 rounded text-xs font-cinzel font-bold uppercase tracking-wider flex items-center space-x-2">
+                    <span>■</span> <span>Maya Calendar</span>
+                </button>
+                <button onclick="switchTab('townhall')" id="tab-btn-townhall" class="tab-btn px-3 py-1.5 rounded text-xs font-cinzel font-bold uppercase tracking-wider flex items-center space-x-2">
+                    <span>■</span> <span>Town Hall</span>
+                </button>
+            </nav>
+
+            <!-- SYSTEM STATUS METRICS -->
+            <div class="hidden lg:flex items-center space-x-4 font-mono-tech text-xs bg-slate-900/80 border border-amber-900/30 px-3 py-1.5 rounded">
+                <div class="text-amber-400/80">Tzol'kin: <span class="text-amber-200">13.0.12.8.7</span></div>
+                <div class="text-slate-600">|</div>
+                <div class="text-emerald-400 flex items-center space-x-1">
+                    <span class="w-2 h-2 rounded-full bg-emerald-500 inline-block animate-pulse"></span>
+                    <span>JIMMY ENGINE ONLINE</span>
+                </div>
+            </div>
+        </div>
+
+        <!-- MOBILE NAV MENU -->
+        <div class="md:hidden flex overflow-x-auto space-x-2 mt-2 pt-2 border-t border-amber-900/20 text-xs font-cinzel">
+            <button onclick="switchTab('globe')" class="px-3 py-1 bg-amber-950/40 text-amber-300 rounded whitespace-nowrap">Globe</button>
+            <button onclick="switchTab('codex')" class="px-3 py-1 bg-slate-900 text-slate-300 rounded whitespace-nowrap">Codex Nations</button>
+            <button onclick="switchTab('tree')" class="px-3 py-1 bg-slate-900 text-slate-300 rounded whitespace-nowrap">World Tree</button>
+            <button onclick="switchTab('maya')" class="px-3 py-1 bg-slate-900 text-slate-300 rounded whitespace-nowrap">Maya Calendar</button>
+            <button onclick="switchTab('townhall')" class="px-3 py-1 bg-slate-900 text-slate-300 rounded whitespace-nowrap">Town Hall</button>
+        </div>
+    </header>
+
+    <!-- MAIN DASHBOARD CONTENT AREA -->
+    <main class="flex-grow max-w-7xl w-full mx-auto p-4 lg:p-6 space-y-6">
+
+        <!-- VIEW 1: 3D ROTATING GLOBE & LIVE TELEMETRY -->
+        <section id="view-globe" class="space-y-6">
+            <div class="grid grid-cols-1 lg:grid-cols-12 gap-6">
                 
-                <!-- Brand / Logo -->
-                <div class="flex items-center space-x-3">
-                    <div class="h-3 w-3 rounded-full bg-cyan-500 animate-pulse"></div>
-                    <span class="text-lg font-bold tracking-wider text-white">ENIGMA <span class="text-cyan-400">5789 M</span> + JIMMY AI</span>
-                </div>
+                <!-- LEFT SIDEBAR: GLOBAL RISK INDEX & KEY EVENTS -->
+                <div class="lg:col-span-3 space-y-4">
+                    <div class="panel-glass gold-border p-4 rounded-lg">
+                        <div class="corner-glyph cg-tl"></div><div class="corner-glyph cg-tr"></div>
+                        <h2 class="text-xs font-cinzel font-bold text-amber-400 tracking-widest uppercase mb-3 flex justify-between items-center">
+                            <span>Global Risk Index</span>
+                            <span class="text-[10px] font-mono-tech text-amber-500/60">W1-W5 BIN</span>
+                        </h2>
+                        
+                        <div class="flex items-center space-x-4 mb-4">
+                            <div class="relative flex items-center justify-center w-16 h-16 border-2 border-amber-500/50 rounded-full bg-amber-950/20">
+                                <span class="text-2xl font-cinzel font-bold text-amber-200">67</span>
+                                <div class="absolute inset-0 border border-amber-400/30 rounded-full animate-ping"></div>
+                            </div>
+                            <div class="flex-grow space-y-1 font-mono-tech text-xs">
+                                <div class="flex justify-between text-slate-400"><span>Political</span><span class="text-rose-400">72</span></div>
+                                <div class="flex justify-between text-slate-400"><span>Economic</span><span class="text-amber-400">61</span></div>
+                                <div class="flex justify-between text-slate-400"><span>Military</span><span class="text-rose-400">68</span></div>
+                                <div class="flex justify-between text-slate-400"><span>Cyber</span><span class="text-cyan-400">56</span></div>
+                            </div>
+                        </div>
 
-                <!-- Desktop Navigation Tabs -->
-                <div class="hidden md:flex space-x-2">
-                    <button onclick="switchTab('pipeline')" id="btn-pipeline" class="tab-btn px-3 py-2 rounded-md text-sm font-medium transition-colors bg-blue-950/60 text-blue-400 border border-blue-800/50">
-                        <span class="text-blue-400 font-bold">■</span> Ingestion Hub
-                    </button>
-                    <button onclick="switchTab('locked')" id="btn-locked" class="tab-btn px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-300 hover:bg-slate-800 hover:text-white">
-                        <span class="text-emerald-400 font-bold">■</span> Locked Series
-                    </button>
-                    <button onclick="switchTab('killtest')" id="btn-killtest" class="tab-btn px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-300 hover:bg-slate-800 hover:text-white">
-                        <span class="text-rose-500 font-bold">■</span> Kill-Tests & Advisories
-                    </button>
-                    <button onclick="switchTab('maya')" id="btn-maya" class="tab-btn px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-300 hover:bg-slate-800 hover:text-white">
-                        <span class="text-purple-400 font-bold">■</span> Maya Harmonic
-                    </button>
-                    <button onclick="switchTab('neural')" id="btn-neural" class="tab-btn px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-300 hover:bg-slate-800 hover:text-white">
-                        <span class="text-amber-400 font-bold">■</span> Neural Hazard
-                    </button>
-                </div>
-
-                <!-- System Status Indicator -->
-                <div class="flex items-center space-x-2 bg-slate-950 px-3 py-1.5 rounded border border-slate-800 text-xs text-emerald-400 font-mono">
-                    <span class="h-2 w-2 rounded-full bg-emerald-500"><span></span>
-                    <span>SYSTEM ONLINE</span>
-                </div>
-            </div>
-        </div>
-
-        <!-- Mobile Navigation Menu -->
-        <div class="md:hidden flex overflow-x-auto space-x-2 px-4 py-2 bg-slate-950 border-t border-slate-800">
-            <button onclick="switchTab('pipeline')" class="mobile-btn px-3 py-1.5 rounded text-xs whitespace-nowrap bg-blue-950 text-blue-400">Ingestion</button>
-            <button onclick="switchTab('locked')" class="mobile-btn px-3 py-1.5 rounded text-xs whitespace-nowrap bg-slate-800 text-slate-300">Locked Series</button>
-            <button onclick="switchTab('killtest')" class="mobile-btn px-3 py-1.5 rounded text-xs whitespace-nowrap bg-slate-800 text-slate-300">Kill-Tests</button>
-            <button onclick="switchTab('maya')" class="mobile-btn px-3 py-1.5 rounded text-xs whitespace-nowrap bg-slate-800 text-slate-300">Maya Map</button>
-            <button onclick="switchTab('neural')" class="mobile-btn px-3 py-1.5 rounded text-xs whitespace-nowrap bg-slate-800 text-slate-300">Neural Hazard</button>
-        </div>
-    </nav>
-
-    <!-- ==================== MAIN CONTENT CONTAINER ==================== -->
-    <main class="flex-grow max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-8">
-
-        <!-- TAB 1: PIPELINE INGESTION HUB (BLUE) -->
-        <div id="tab-pipeline" class="tab-content active space-y-6">
-            <div class="border-l-4 border-blue-500 pl-4 py-1">
-                <h1 class="text-2xl font-bold text-white"><span class="text-blue-400">■</span> Pipeline & Ingestion Hub</h1>
-                <p class="text-sm text-slate-400">Grok real-time X/Twitter velocity feeds, open-source registries, and W1-W5 operational window binning.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-slate-900 border border-blue-900/40 rounded-lg p-5">
-                    <h3 class="font-semibold text-blue-400 mb-2">Grok High-Velocity Stream</h3>
-                    <p class="text-xs text-slate-400 mb-4">Live pulse ingestion running at 120 events/sec. Window: W1 (Immediate).</p>
-                    <div class="bg-slate-950 p-3 rounded font-mono text-xs text-cyan-300 border border-slate-800">Status: Streaming [Active]</div>
-                </div>
-                <div class="bg-slate-900 border border-blue-900/40 rounded-lg p-5">
-                    <h3 class="font-semibold text-blue-400 mb-2">Claude Primary Registries</h3>
-                    <p class="text-xs text-slate-400 mb-4">Polling 16+ global state portals (MEA India, MOFA Japan, EU EEAS, CENTCOM).</p>
-                    <div class="bg-slate-950 p-3 rounded font-mono text-xs text-cyan-300 border border-slate-800">Sync: Up to date</div>
-                </div>
-                <div class="bg-slate-900 border border-blue-900/40 rounded-lg p-5">
-                    <h3 class="font-semibold text-blue-400 mb-2">Economic Data APIs</h3>
-                    <p class="text-xs text-slate-400 mb-4">World Bank indicators & UN Comtrade time-series ingestion.</p>
-                    <div class="bg-slate-950 p-3 rounded font-mono text-xs text-cyan-300 border border-slate-800">Status: Polling OK</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 2: LOCKED SERIES ENGINE (GREEN) -->
-        <div id="tab-locked" class="tab-content space-y-6">
-            <div class="border-l-4 border-emerald-500 pl-4 py-1">
-                <h1 class="text-2xl font-bold text-white"><span class="text-emerald-400">■</span> Locked Series Scoring Engine</h1>
-                <p class="text-sm text-slate-400">Independent daily, weekly, and monthly roll-ups across the three locked series without zeroing missing days.</p>
-            </div>
-            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-                <div class="bg-slate-900 border border-emerald-900/40 rounded-lg p-5">
-                    <h3 class="font-semibold text-emerald-400 mb-1">Series P ↔ R</h3>
-                    <p class="text-xs text-slate-400 mb-3">Prediction vs. Empirical Real-World Verification</p>
-                    <div class="text-2xl font-bold font-mono text-emerald-300">0.865</div>
-                </div>
-                <div class="bg-slate-900 border border-emerald-900/40 rounded-lg p-5">
-                    <h3 class="font-semibold text-emerald-400 mb-1">Series M ↔ R</h3>
-                    <p class="text-xs text-slate-400 mb-3">Maya Symbolism vs. Real-World Ground Truth</p>
-                    <div class="text-2xl font-bold font-mono text-emerald-300">0.812</div>
-                </div>
-                <div class="bg-slate-900 border border-emerald-900/40 rounded-lg p-5">
-                    <h3 class="font-semibold text-emerald-400 mb-1">Series P ↔ M</h3>
-                    <p class="text-xs text-slate-400 mb-3">Prediction Model vs. Maya Framework Alignment</p>
-                    <div class="text-2xl font-bold font-mono text-emerald-300">0.841</div>
-                </div>
-            </div>
-        </div>
-
-        <!-- TAB 3: KILL-TESTS & ADVISORIES (RED) -->
-        <div id="tab-killtest" class="tab-content space-y-6">
-            <div class="border-l-4 border-rose-500 pl-4 py-1">
-                <h1 class="text-2xl font-bold text-white"><span class="text-rose-500">■</span> Kill-Tests & High-Risk Advisories</h1>
-                <p class="text-sm text-slate-400">Rigorous evidentiary filtering, speculation downranking, and breaking conflict Net Advisories.</p>
-            </div>
-            <div class="bg-slate-900 border border-rose-900/40 rounded-lg p-6 space-y-4">
-                <div class="flex items-center justify-between border-b border-slate-800 pb-3">
-                    <div>
-                        <span class="text-xs uppercase px-2 py-0.5 rounded bg-rose-950 text-rose-400 font-bold border border-rose-800">Kill-Test Triggered</span>
-                        <p class="text-sm font-medium mt-1">Record ID: ENIGMA-X-03 (Unverified Social Chatter)</p>
+                        <div class="border-t border-amber-900/30 pt-3 space-y-2 font-mono-tech text-xs">
+                            <div class="text-amber-400/80 font-bold uppercase">Key Global Signals</div>
+                            <div class="p-2 bg-slate-950/60 rounded border border-rose-900/40 text-rose-300">
+                                <span class="text-rose-500">⚠</span> Middle East Maritime Transit Risk Elevated
+                            </div>
+                            <div class="p-2 bg-slate-950/60 rounded border border-amber-900/40 text-amber-300">
+                                <span class="text-amber-500">⚡</span> East Asia Tech Hardware Supply Friction
+                            </div>
+                        </div>
                     </div>
-                    <span class="text-xs text-slate-400 font-mono">Status: Downgraded to Unsupported</span>
-                </div>
-                <div class="flex items-center justify-between">
-                    <div>
-                        <span class="text-xs uppercase px-2 py-0.5 rounded bg-amber-950 text-amber-400 font-bold border border-amber-800">Net Advisory Active</span>
-                        <p class="text-sm font-medium mt-1">Maritime corridor stability variance detected in Bab el-Mandeb sector.</p>
+
+                    <!-- ACTIVE PLAYERS COUNTER -->
+                    <div class="panel-glass gold-border p-4 rounded-lg font-mono-tech text-xs space-y-2">
+                        <div class="text-amber-400 font-bold uppercase font-cinzel text-xs">Active Global Entities</div>
+                        <div class="flex justify-between py-1 border-b border-slate-800"><span>Global Superpowers</span><span class="text-amber-200">12</span></div>
+                        <div class="flex justify-between py-1 border-b border-slate-800"><span>Regional Actors</span><span class="text-amber-200">28</span></div>
+                        <div class="flex justify-between py-1 border-b border-slate-800"><span>Non-State Alliances</span><span class="text-amber-200">46</span></div>
+                        <div class="flex justify-between py-1"><span>Latent Gaps / Gaps Addressed</span><span class="text-emerald-400">17</span></div>
                     </div>
-                    <span class="text-xs text-slate-400 font-mono">Severity: Moderate</span>
                 </div>
-            </div>
-        </div>
 
-        <!-- TAB 4: MAYA HARMONIC MAP (PURPLE) -->
-        <div id="tab-maya" class="tab-content space-y-6">
-            <div class="border-l-4 border-purple-500 pl-4 py-1">
-                <h1 class="text-2xl font-bold text-white"><span class="text-purple-400">■</span> Maya Harmonic Symbolism Map</h1>
-                <p class="text-sm text-slate-400">Tzolkin and Haab temporal cycle mapping, glyph alignment, and periodic harmonic metrics.</p>
-            </div>
-            <div class="bg-slate-900 border border-purple-900/40 rounded-lg p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <h3 class="text-sm font-semibold text-purple-400 mb-2">Active Kin Cycle</h3>
-                    <p class="text-xs text-slate-300 font-mono bg-slate-950 p-4 rounded border border-slate-800">Kin 182: White Cosmic Wind (Harmonic Resonance Window)</p>
-                </div>
-                <div>
-                    <h3 class="text-sm font-semibold text-purple-400 mb-2">Archetypal Alignment Score</h3>
-                    <p class="text-xs text-slate-300 font-mono bg-slate-950 p-4 rounded border border-slate-800">Harmonic Index: 0.89 (High Synchronicity)</p>
-                </div>
-            </div>
-        </div>
+                <!-- CENTER: THREE.JS 3D ROTATING GLOBE -->
+                <div class="lg:col-span-6 relative min-h-[420px] lg:min-h-[500px] panel-glass gold-border rounded-lg overflow-hidden flex flex-col justify-between p-4">
+                    <div class="corner-glyph cg-tl"></div><div class="corner-glyph cg-tr"></div>
+                    <div class="corner-glyph cg-bl"></div><div class="corner-glyph cg-br"></div>
 
-        <!-- TAB 5: NEURAL HAZARD FORECAST (AMBER) -->
-        <div id="tab-neural" class="tab-content space-y-6">
+                    <!-- GLOBE HEADER OVERLAY -->
+                    <div class="z-10 flex justify-between items-start">
+                        <div>
+                            <h3 class="font-cinzel text-sm font-bold text-amber-200 tracking-wider">EARTH ORBITAL REAL-TIME SIMULATION</h3>
+                            <p class="text-[10px] font-mono-tech text-amber-500/70">ROTATION: COUNTER-CLOCKWISE (WEST TO EAST) • 15°/HR ROTATION RATE</p>
+                        </div>
+                        <span class="px-2 py-0.5 bg-amber-950/60 border border-amber-500/40 rounded text-[10px] font-mono-tech text-amber-300">LIVE FEED</span>
+                    </div>
+
+                    <!-- THREE.JS GLOBE CONTAINER CANVAS -->
+                    <div id="globe-container" class="absolute inset-0 w-full h-full cursor-grab active:cursor-grabbing"></div>
+
+                    <!-- GLOBE FOOTER CONTROLS OVERLAY -->
+                    <div class="z-10 flex justify-between items-center font-mono-tech text-xs bg-slate-950/70 backdrop-blur p-2 rounded border border-amber-900/30">
+                        <div class="flex space-x-2">
+                            <button onclick="toggleGlobeRotation()" class="px-2 py-1 bg-amber-950 hover:bg-amber-900 text-amber-200 rounded border border-amber-700/50">Pause/Play</button>
+                            <button onclick="resetGlobeCamera()" class="px-2 py-1 bg-slate-900 hover:bg-slate-800 text-slate-300 rounded border border-slate-700">Reset View</button>
+                        </div>
+                        <div class="text-amber-400/80">LAT: <span id="globe-lat">20.0</span>° N | LON: <span id="globe-lon">-89.0</span>° W</div>
+                    </div>
+                </div>
+
+                <!-- RIGHT SIDEBAR: JIMMY AI COGNITION METRICS -->
+                <div class="lg:col-span-3 space-y-4">
+                    <div class="panel-glass gold-border p-4 rounded-lg space-y-3">
+                        <div class="corner-glyph cg-tl"></div><div class="corner-glyph cg-tr"></div>
+                        <h2 class="text-xs font-cinzel font-bold text-amber-400 tracking-widest uppercase flex items-center justify-between">
+                            <span>Jimmy AI Cognition</span>
+                            <span class="w-2 h-2 rounded-full bg-cyan-400 animate-ping"></span>
+                        </h2>
+
+                        <div class="p-3 bg-slate-950/70 rounded border border-cyan-900/40 text-xs font-mono-tech space-y-2">
+                            <div class="text-cyan-400 font-bold">LOCKED SERIES ROLL-UP SCORES</div>
+                            <div class="flex justify-between"><span>P ↔ R (Prediction vs Real)</span><span class="text-emerald-400 font-bold">0.865</span></div>
+                            <div class="flex justify-between"><span>M ↔ R (Maya Symbol vs Real)</span><span class="text-emerald-400 font-bold">0.812</span></div>
+                            <div class="flex justify-between"><span>P ↔ M (Prediction vs Maya)</span><span class="text-emerald-400 font-bold">0.841</span></div>
+                        </div>
+
+                        <div class="p-3 bg-slate-950/70 rounded border border-amber-900/40 text-xs font-mono-tech space-y-1">
+                            <div class="text-amber-400 font-bold">NEURAL HAZARD FORECAST</div>
+                            <div class="flex justify-between text-slate-400"><span>Peak Hazard λ(t|X):</span><span class="text-amber-300 font-bold">0.0482</span></div>
+                            <div class="flex justify-between text-slate-400"><span>90-Day Survival S(t|X):</span><span class="text-amber-300 font-bold">0.9124</span></div>
+                        </div>
+
+                        <div class="p-3 bg-rose-950/20 rounded border border-rose-900/40 text-xs space-y-1">
+                            <div class="text-rose-400 font-bold font-mono-tech uppercase">Evidentiary Status</div>
+                            <p class="text-slate-300 text-[11px]">Kill-test active. 3 unsupported speculation items downgraded in past 24h.</p>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: CODEX OF NATIONS (PSYCHOLOGICAL & TRADE NATION ARCHETYPES) -->
+        <section id="view-codex" class="hidden space-y-6">
             <div class="border-l-4 border-amber-500 pl-4 py-1">
-                <h1 class="text-2xl font-bold text-white"><span class="text-amber-400">■</span> Neural Time-to-Event Hazard Engine</h1>
-                <p class="text-sm text-slate-400">Right-censored survival probability curves, hazard progression, and Jimmy AI deep neural forecasts.</p>
+                <h2 class="text-2xl font-cinzel font-bold text-amber-200">The Codex of Nations</h2>
+                <p class="text-xs font-mono-tech text-amber-500/70">MANGA / ANIME / SCI-FI ARCHETYPES x MAYAN CODEX GEOPOLITICAL PSYCHOLOGY</p>
             </div>
-            <div class="bg-slate-900 border border-amber-900/40 rounded-lg p-6 grid grid-cols-1 md:grid-cols-2 gap-6">
-                <div>
-                    <h3 class="text-sm font-semibold text-amber-400 mb-2">Peak Hazard Rate $\lambda(t|X)$</h3>
-                    <p class="text-2xl font-bold font-mono text-amber-300 bg-slate-950 p-4 rounded border border-slate-800">0.0482</p>
+
+            <!-- NATION SELECTOR GRID -->
+            <div class="grid grid-cols-2 sm:grid-cols-4 lg:grid-cols-8 gap-2 font-cinzel text-xs">
+                <button onclick="loadNationProfile('usa')" class="p-2 bg-slate-900 hover:bg-amber-950 border border-amber-900/40 rounded text-center text-amber-200">🇺SA United States</button>
+                <button onclick="loadNationProfile('japan')" class="p-2 bg-slate-900 hover:bg-amber-950 border border-amber-900/40 rounded text-center text-amber-200">🇯🇵 Japan</button>
+                <button onclick="loadNationProfile('china')" class="p-2 bg-slate-900 hover:bg-amber-950 border border-amber-900/40 rounded text-center text-amber-200">🇨🇳 China</button>
+                <button onclick="loadNationProfile('india')" class="p-2 bg-slate-900 hover:bg-amber-950 border border-amber-900/40 rounded text-center text-amber-200">🇮🇳 India</button>
+                <button onclick="loadNationProfile('eu')" class="p-2 bg-slate-900 hover:bg-amber-950 border border-amber-900/40 rounded text-center text-amber-200">🇪🇺 Germany/EU</button>
+                <button onclick="loadNationProfile('iran')" class="p-2 bg-slate-900 hover:bg-amber-950 border border-amber-900/40 rounded text-center text-amber-200">🇮🇷 Iran</button>
+                <button onclick="loadNationProfile('brazil')" class="p-2 bg-slate-900 hover:bg-amber-950 border border-amber-900/40 rounded text-center text-amber-200">🇧🇷 Brazil</button>
+                <button onclick="loadNationProfile('southafrica')" class="p-2 bg-slate-900 hover:bg-amber-950 border border-amber-900/40 rounded text-center text-amber-200">🇿🇦 S. Africa</button>
+            </div>
+
+            <!-- NATION DETAILED DISPLAY CARD -->
+            <div id="nation-card-display" class="panel-glass gold-border p-6 rounded-lg grid grid-cols-1 lg:grid-cols-12 gap-6">
+                <!-- Content dynamically populated via JS -->
+            </div>
+        </section>
+
+        <!-- VIEW 3: WORLD TREE CAUSALITY GRAPH -->
+        <section id="view-tree" class="hidden space-y-6">
+            <div class="border-l-4 border-amber-500 pl-4 py-1">
+                <h2 class="text-2xl font-cinzel font-bold text-amber-200">Yaxche World Tree Network</h2>
+                <p class="text-xs font-mono-tech text-amber-500/70">CAUSALITY BRANCHES • SCENARIO TIMELINES • GEOPOLITICAL PROBABILITIES</p>
+            </div>
+            <div class="panel-glass gold-border p-4 rounded-lg min-h-[400px] relative overflow-hidden flex items-center justify-center">
+                <canvas id="world-tree-canvas" class="w-full h-80"></canvas>
+            </div>
+        </section>
+
+        <!-- VIEW 4: MAYA CALENDAR ENGINE -->
+        <section id="view-maya" class="hidden space-y-6">
+            <div class="border-l-4 border-amber-500 pl-4 py-1">
+                <h2 class="text-2xl font-cinzel font-bold text-amber-200">Maya Tzolkin Calendar Cycle Engine</h2>
+                <p class="text-xs font-mono-tech text-amber-500/70">SACRED 260-DAY HARMONIC CYCLE • HAAB SOLAR ALIGNMENT • LONG COUNT CORRELATION</p>
+            </div>
+            <div class="panel-glass gold-border p-6 rounded-lg flex flex-col md:flex-row items-center justify-around space-y-6 md:space-y-0">
+                <div class="relative w-64 h-64 flex items-center justify-center">
+                    <div class="absolute inset-0 border-4 border-dashed border-amber-500/40 rounded-full rotate-slow"></div>
+                    <div class="text-center font-cinzel">
+                        <div class="text-amber-400 font-bold text-lg">KIN 182</div>
+                        <div class="text-slate-400 text-xs">WHITE COSMIC WIND</div>
+                        <div class="text-amber-500/70 text-[10px] font-mono-tech mt-2">13.0.12.8.7</div>
+                    </div>
                 </div>
-                <div>
-                    <h3 class="text-sm font-semibold text-amber-400 mb-2">Horizon Survival Probability $S(t|X)$</h3>
-                    <p class="text-2xl font-bold font-mono text-amber-300 bg-slate-950 p-4 rounded border border-slate-800">0.9124 (90 Days)</p>
+                <div class="font-mono-tech text-xs space-y-3 max-w-md">
+                    <div class="text-amber-400 font-bold uppercase border-b border-amber-900/40 pb-1">Current Cycle Alignments</div>
+                    <div class="flex justify-between"><span>Solar Cycle Progress:</span><span class="text-amber-200">65%</span></div>
+                    <div class="flex justify-between"><span>Lunar Cycle Progress:</span><span class="text-amber-200">72%</span></div>
+                    <div class="flex justify-between"><span>Venus Cycle Phase:</span><span class="text-amber-200">Evening Star</span></div>
+                    <div class="p-3 bg-amber-950/30 rounded border border-amber-900/40 text-amber-300">
+                        Symbolic Harmonic Alignment ($M \leftrightarrow R$) aligns elevated geopolitical probability with current maritime supply transitions.
+                    </div>
                 </div>
             </div>
-        </div>
+        </section>
+
+        <!-- VIEW 5: TOWN HALL & COMMUNITY FORUM -->
+        <section id="view-townhall" class="hidden space-y-6">
+            <div class="border-l-4 border-amber-500 pl-4 py-1">
+                <h2 class="text-2xl font-cinzel font-bold text-amber-200">Global Town Hall Assembly</h2>
+                <p class="text-xs font-mono-tech text-amber-500/70">OPEN DISCUSSIONS • MULTI-MODEL ANALYSIS • ANOMALY SHARING</p>
+            </div>
+            <div class="panel-glass gold-border p-6 rounded-lg space-y-4 font-mono-tech text-xs">
+                <div class="p-4 bg-slate-950/70 rounded border border-amber-900/30 space-y-2">
+                    <div class="flex justify-between text-amber-400 font-bold">
+                        <span>[GEOPOLITICS] Supply Chain Bottleneck Forecasting</span>
+                        <span class="text-slate-500">2 hours ago</span>
+                    </div>
+                    <p class="text-slate-300">Observation corroborated by MEA India and CENTCOM logs. Jimmy Engine risk level: ELEVATED.</p>
+                </div>
+            </div>
+        </section>
 
     </main>
 
-    <!-- ==================== SCRIPT CONTROLLER ==================== -->
+    <!-- FOOTER -->
+    <footer class="bg-slate-950 border-t border-amber-900/40 p-4 text-center font-mono-tech text-xs text-amber-500/60">
+        ENIGMA 5789 M + JIMMY AI ENGINE • ANCIENT WISDOM + MODERN INTELLIGENCE = A CLEARER TOMORROW
+    </footer>
+
+    <!-- INTERACTIVE JAVASCRIPT LOGIC -->
     <script>
-        function switchTab(tabName) {
-            // Hide all tab contents
-            const contents = document.querySelectorAll('.tab-content');
-            contents.forEach(el => el.classList.remove('active'));
-
-            // Reset desktop tab button styles
-            const buttons = document.querySelectorAll('.tab-btn');
-            buttons.forEach(btn => {
-                btn.className = "tab-btn px-3 py-2 rounded-md text-sm font-medium transition-colors text-slate-300 hover:bg-slate-800 hover:text-white";
+        // ==================== TAB SWITCHER LOGIC ====================
+        function switchTab(tabId) {
+            const views = ['globe', 'codex', 'tree', 'maya', 'townhall'];
+            views.forEach(v => {
+                document.getElementById('view-' + v).classList.add('hidden');
+                const btn = document.getElementById('tab-btn-' + v);
+                if (btn) btn.classList.remove('active');
             });
+            document.getElementById('view-' + tabId).classList.remove('hidden');
+            const activeBtn = document.getElementById('tab-btn-' + tabId);
+            if (activeBtn) activeBtn.classList.add('active');
 
-            // Show selected tab content
-            document.getElementById('tab-' + tabName).classList.add('active');
-
-            // Highlight active desktop tab button
-            const activeBtn = document.getElementById('btn-' + tabName);
-            if (activeBtn) {
-                activeBtn.className = "tab-btn px-3 py-2 rounded-md text-sm font-medium transition-colors bg-slate-800 text-white border border-slate-700 shadow";
-            }
+            if (tabId === 'tree') drawWorldTreeCanvas();
         }
+
+        // ==================== THREE.JS 3D ROTATING GLOBE ====================
+        let scene, camera, renderer, globe, isRotating = true;
+
+        function initGlobe() {
+            const container = document.getElementById('globe-container');
+            scene = new THREE.Scene();
+            camera = new THREE.PerspectiveCamera(45, container.clientWidth / container.clientHeight, 0.1, 1000);
+            camera.position.z = 2.8;
+
+            renderer = new THREE.WebGLRenderer({ alpha: true, antialias: true });
+            renderer.setSize(container.clientWidth, container.clientHeight);
+            container.appendChild(renderer.domElement);
+
+            // Globe Geometry & Sphere Shader
+            const geometry = new THREE.SphereGeometry(1, 48, 48);
+            const material = new THREE.MeshBasicMaterial({
+                color: 0xC5A15B,
+                wireframe: true,
+                transparent: true,
+                opacity: 0.35
+            });
+            globe = new THREE.Mesh(geometry, material);
+            scene.add(globe);
+
+            // Add Inner Glowing Core
+            const coreGeom = new THREE.SphereGeometry(0.98, 32, 32);
+            const coreMat = new THREE.MeshBasicMaterial({ color: 0x0D0F12 });
+            const core = new THREE.Mesh(coreGeom, coreMat);
+            scene.add(core);
+
+            // Render Loop (Earth counter-clockwise rotation: West to East -> positive Y rotation)
+            function animate() {
+                requestAnimationFrame(animate);
+                if (isRotating && globe) {
+                    globe.rotation.y += 0.002; // Counter-clockwise Earth spin
+                }
+                renderer.render(scene, camera);
+            }
+            animate();
+
+            // Handle Resize
+            window.addEventListener('resize', () => {
+                if (!container) return;
+                camera.aspect = container.clientWidth / container.clientHeight;
+                camera.updateProjectionMatrix();
+                renderer.setSize(container.clientWidth, container.clientHeight);
+            });
+        }
+
+        function toggleGlobeRotation() { isRotating = !isRotating; }
+        function resetGlobeCamera() { if (camera) camera.position.set(0, 0, 2.8); }
+
+        // ==================== NATION CODEX DATA & RENDERING ====================
+        const nationsData = {
+            usa: {
+                name: "United States of America",
+                title: "The Cybernetic Titan of Sovereignty",
+                exports: "High-tech defense systems, microprocessors, liquified natural gas, global entertainment",
+                imports: "Consumer electronics, rare earth elements, pharmaceuticals, automotive machinery",
+                allies: "NATO allies, Japan, South Korea, Australia, Israel, UK",
+                perception_global: "Perceived as a hyper-technological power balancing global security with economic dominance.",
+                perception_self: "Perceives itself as the indispensable guardian of freedom and modern global stability.",
+                archetype: "Anime/Manga Sci-Fi Mech Commander styled in gold-embossed Mayan armor glyphs."
+            },
+            japan: {
+                name: "Japan",
+                title: "The Solar Samurai of Tech Harmonization",
+                exports: "Automotive precision, robotics, semiconductor materials, culture & anime media",
+                imports: "Crude oil, natural gas, agricultural produce, raw metallic ores",
+                allies: "United States, Australia, India, EU member states",
+                perception_global: "Viewed as a master of technological synthesis, discipline, and aesthetic refinement.",
+                perception_self: "Perceives itself as a peaceful bridge between ancient traditions and futuristic frontiers.",
+                archetype: "Cyber-Samurai with holographic Katana and solar Mayan Tzolkin sigils."
+            },
+            china: {
+                name: "China",
+                title: "The Obsidian Dragon of Supply Grids",
+                exports: "Industrial machinery, photovoltaics, electronics, rare minerals, EV technology",
+                imports: "Iron ore, crude oil, semiconductors, soybeans, heavy machinery",
+                allies: "Russia, Pakistan, North Korea, Global South economic partners",
+                perception_global: "Viewed as an unstoppable industrial engine and central hub of world trade.",
+                perception_self: "Perceives itself as restoring its historic legacy as the central kingdom of global civilization.",
+                archetype: "Armored Mecha Dragon Strategist embedded with jade and gold codex carvings."
+            },
+            iran: {
+                name: "Iran",
+                title: "The Ancient Citadel of Asymmetric Shielding",
+                exports: "Crude oil, petrochemicals, minerals, carpets, agricultural produce",
+                imports: "Industrial machinery, food grains, medicine, technical equipment",
+                allies: "Regional resistance alliances, strategic ties with Russia and China",
+                perception_global: "Viewed as a resilient, complex regional force utilizing asymmetric strategies.",
+                perception_self: "Perceives itself as an unyielding fortress preserving ancient cultural sovereignty.",
+                archetype: "Mystic Cyber-Alchemist wearing golden Persian-Mayan glyph weaves."
+            }
+        };
+
+        function loadNationProfile(code) {
+            const data = nationsData[code] || nationsData['usa'];
+            const container = document.getElementById('nation-card-display');
+            container.innerHTML = `
+                <div class="lg:col-span-4 space-y-4 border-r border-amber-900/30 pr-0 lg:pr-6">
+                    <div class="w-full h-64 bg-slate-950 border border-amber-500/30 rounded flex items-center justify-center p-4">
+                        <div class="text-center font-cinzel">
+                            <span class="text-4xl">🏛</span>
+                            <div class="text-amber-200 font-bold mt-2">${data.name}</div>
+                            <div class="text-amber-500/80 text-xs">${data.title}</div>
+                        </div>
+                    </div>
+                </div>
+                <div class="lg:col-span-8 space-y-4 font-mono-tech text-xs">
+                    <h3 class="text-lg font-cinzel font-bold text-amber-200">${data.name} — Geopolitical Analysis</h3>
+                    <div class="grid grid-cols-1 md:grid-cols-2 gap-4">
+                        <div class="p-3 bg-slate-950/60 rounded border border-amber-900/30">
+                            <span class="text-amber-400 font-bold uppercase">Primary Exports</span>
+                            <p class="text-slate-300 mt-1">${data.exports}</p>
+                        </div>
+                        <div class="p-3 bg-slate-950/60 rounded border border-amber-900/30">
+                            <span class="text-amber-400 font-bold uppercase">Primary Imports</span>
+                            <p class="text-slate-300 mt-1">${data.imports}</p>
+                        </div>
+                    </div>
+                    <div class="p-3 bg-slate-950/60 rounded border border-amber-900/30">
+                        <span class="text-amber-400 font-bold uppercase">Global Perception vs Self Perception</span>
+                        <p class="text-slate-300 mt-1"><strong>Global:</strong> ${data.perception_global}</p>
+                        <p class="text-slate-300 mt-1"><strong>Self:</strong> ${data.perception_self}</p>
+                    </div>
+                    <div class="p-3 bg-amber-950/30 rounded border border-amber-500/30 text-amber-200">
+                        <span class="font-bold">Anime/Maya Visual Archetype:</span> ${data.archetype}
+                    </div>
+                </div>
+            `;
+        }
+
+        // ==================== CANVAS WORLD TREE GRAPH ====================
+        function drawWorldTreeCanvas() {
+            const canvas = document.getElementById('world-tree-canvas');
+            if (!canvas) return;
+            const ctx = canvas.getContext('2d');
+            canvas.width = canvas.parentElement.clientWidth;
+            canvas.height = canvas.parentElement.clientHeight || 320;
+
+            ctx.clearRect(0, 0, canvas.width, canvas.height);
+            ctx.strokeStyle = '#C5A15B';
+            ctx.lineWidth = 2;
+
+            // Draw Central Stem & Branches
+            ctx.beginPath();
+            ctx.moveTo(canvas.width / 2, canvas.height);
+            ctx.lineTo(canvas.width / 2, canvas.height / 2);
+            ctx.lineTo(canvas.width / 4, canvas.height / 4);
+            ctx.moveTo(canvas.width / 2, canvas.height / 2);
+            ctx.lineTo((3 * canvas.width) / 4, canvas.height / 4);
+            ctx.stroke();
+
+            // Draw Nodes
+            const nodes = [
+                { x: canvas.width / 2, y: canvas.height / 2, label: "Core State" },
+                { x: canvas.width / 4, y: canvas.height / 4, label: "Diplomatic Branch" },
+                { x: (3 * canvas.width) / 4, y: canvas.height / 4, label: "Conflict Risk" }
+            ];
+
+            nodes.forEach(n => {
+                ctx.fillStyle = '#12161C';
+                ctx.strokeStyle = '#00F0FF';
+                ctx.beginPath();
+                ctx.arc(n.x, n.y, 12, 0, Math.PI * 2);
+                ctx.fill();
+                ctx.stroke();
+
+                ctx.fillStyle = '#E0C078';
+                ctx.font = '10px Share Tech Mono';
+                ctx.fillText(n.label, n.x - 25, n.y - 18);
+            });
+        }
+
+        // Initialize application on page load
+        window.onload = () => {
+            initGlobe();
+            loadNationProfile('usa');
+            lucide.createIcons();
+        };
     </script>
 </body>
 </html>
