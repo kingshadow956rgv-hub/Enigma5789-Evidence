@@ -1,0 +1,394 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENIGMA 5789 + JIMMY AI :: Global Psychological & Geopolitical Engine</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Cinzel Decorative, Space Grotesk, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Space+Grotesk:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Three.js (3D Globe) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#0B0C0E',
+            stoneDark: '#121317',
+            stonePanel: '#1A1B20',
+            goldGlyph: '#C5A15B',
+            goldGlow: '#E5C178',
+            parchment: '#F0E0CE',
+            neonCyan: '#00F0FF',
+            neonAmber: '#FFB000',
+            neonEmerald: '#00FF9D',
+            neonCrimson: '#FF2A54'
+          },
+          fontFamily: {
+            cinzel: ['Cinzel Decorative', 'serif'],
+            tech: ['Space Grotesk', 'sans-serif'],
+            body: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Obsidian Stone & Gold Styling */
+    body {
+      background-color: #0B0C0E;
+      color: #F0E0CE;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(197, 161, 91, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(0, 240, 255, 0.03) 0%, transparent 40%);
+    }
+
+    /* Maya Stone Frame Borders */
+    .mayan-frame {
+      border: 2px solid #C5A15B;
+      background: linear-gradient(145deg, #16171D, #101115);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.8), inset 0 0 15px rgba(197, 161, 91, 0.1);
+      position: relative;
+    }
+
+    .mayan-frame::before {
+      content: '❖';
+      position: absolute;
+      top: -10px;
+      left: 12px;
+      color: #C5A15B;
+      font-size: 12px;
+      background: #0B0C0E;
+      padding: 0 4px;
+    }
+
+    .mayan-frame::after {
+      content: '❖';
+      position: absolute;
+      bottom: -10px;
+      right: 12px;
+      color: #C5A15B;
+      font-size: 12px;
+      background: #0B0C0E;
+      padding: 0 4px;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #101115;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #C5A15B;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #E5C178;
+    }
+
+    /* Sci-Fi Glow Animations */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.6; filter: drop-shadow(0 0 5px rgba(197, 161, 91, 0.5)); }
+      50% { opacity: 1; filter: drop-shadow(0 0 15px rgba(197, 161, 91, 0.9)); }
+    }
+    .glyph-glow {
+      animation: pulseGlow 4s infinite ease-in-out;
+    }
+
+    @keyframes scanline {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(1000%); }
+    }
+    .scanline-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0, 240, 255, 0.03) 51%);
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+
+    /* Canvas styling */
+    canvas {
+      outline: none;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: absolute;
+      padding: 8px 12px;
+      background: rgba(18, 19, 23, 0.95);
+      border: 1px solid #C5A15B;
+      color: #F0E0CE;
+      font-size: 12px;
+      border-radius: 4px;
+      pointer-events: none;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+      display: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <div id="tooltip" class="tooltip font-tech"></div>
+
+  <!-- MAIN HEADER -->
+  <header class="border-b border-goldGlyph/30 bg-stoneDark/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & Eye Symbol -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-full border-2 border-goldGlyph flex items-center justify-center bg-obsidian glyph-glow cursor-pointer" onclick="switchTab('globe')">
+          <i class="fa-solid font-cinzel text-goldGlyph text-xl">👁</i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-cinzel font-bold text-xl tracking-wider text-goldGlyph">ENIGMA 5789</h1>
+            <span class="text-xs font-tech bg-neonCyan/10 text-neonCyan px-2 py-0.5 rounded border border-neonCyan/30">JIMMY AI v4.8</span>
+          </div>
+          <p class="text-[10px] font-tech text-parchment/60 tracking-widest uppercase">Psychological Geopolitical Cognition Engine</p>
+        </div>
+      </div>
+
+      <!-- Tzolkin Long Count & Gregorian Bar -->
+      <div class="flex items-center space-x-4 bg-obsidian px-4 py-1.5 rounded-lg border border-goldGlyph/30 font-tech text-xs">
+        <div class="text-center">
+          <span class="block text-[9px] text-parchment/50 uppercase">Mayan Long Count</span>
+          <span class="text-goldGlow font-semibold">13.0.12.8.7</span>
+        </div>
+        <div class="h-6 w-[1px] bg-goldGlyph/30"></div>
+        <div class="text-center">
+          <span class="block text-[9px] text-parchment/50 uppercase">Tzolkin Date</span>
+          <span class="text-neonCyan font-semibold">8 CHUEN (Monkey)</span>
+        </div>
+        <div class="h-6 w-[1px] bg-goldGlyph/30"></div>
+        <div class="text-center">
+          <span class="block text-[9px] text-parchment/50 uppercase">Gregorian Time</span>
+          <span id="liveClock" class="text-parchment font-semibold">--- --:--:-- UTC</span>
+        </div>
+      </div>
+
+      <!-- Sci-Fi System Status -->
+      <div class="hidden lg:flex items-center space-x-3 text-xs font-tech">
+        <div class="flex items-center space-x-1.5">
+          <span class="w-2 h-2 rounded-full bg-neonEmerald animate-ping"></span>
+          <span class="text-neonEmerald">Cognition: Synced</span>
+        </div>
+        <div class="bg-stonePanel px-2.5 py-1 rounded border border-goldGlyph/20 text-parchment/80">
+          Neural Nodes: <span class="text-goldGlyph font-bold">142/142</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="bg-stonePanel/80 border-t border-goldGlyph/20 px-4">
+      <div class="max-w-7xl mx-auto flex items-center space-x-1 overflow-x-auto py-1 text-xs font-tech text-parchment/70">
+        <button onclick="switchTab('globe')" id="tab-globe" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-goldGlyph text-goldGlow font-semibold">
+          <i class="fa-solid fa-globe"></i><span>3D Risk Globe</span>
+        </button>
+        <button onclick="switchTab('codex')" id="tab-codex" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-transparent">
+          <i class="fa-solid fa-book-journal-whills"></i><span>Codex of Nations</span>
+        </button>
+        <button onclick="switchTab('scenarios')" id="tab-scenarios" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-transparent">
+          <i class="fa-solid fa-sitemap"></i><span>Yaxche World Tree</span>
+        </button>
+        <button onclick="switchTab('calendar')" id="tab-calendar" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-transparent">
+          <i class="fa-solid fa-dharmachakra"></i><span>Tzol'kin Calendar</span>
+        </button>
+        <button onclick="switchTab('evidence')" id="tab-evidence" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-transparent">
+          <i class="fa-solid fa-list-check"></i><span>Evidence Ledger</span>
+        </button>
+        <button onclick="switchTab('townhall')" id="tab-townhall" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-transparent">
+          <i class="fa-solid fa-users-rays"></i><span>Town Hall Assembly</span>
+        </button>
+        <button onclick="switchTab('forecast')" id="tab-forecast" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-transparent">
+          <i class="fa-solid fa-chart-line"></i><span>Forecast Review</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- QUOTE BAR -->
+  <div class="bg-obsidian border-b border-goldGlyph/20 py-1.5 px-4 text-center">
+    <p class="font-cinzel text-xs text-goldGlyph/90 italic tracking-wider">
+      "The future is not written. It is calculated — and can be changed." <span class="mx-3 text-parchment/30">|</span> "Truth lives in the details."
+    </p>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+    <!-- VIEW 1: 3D GLOBE & LIVE COGNITION PANEL -->
+    <div id="view-globe" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- 3D GLOBE CONTAINER (8 cols) -->
+      <div class="lg:col-span-8 mayan-frame p-4 rounded-xl flex flex-col relative min-h-[520px]">
+        <div class="flex items-center justify-between border-b border-goldGlyph/20 pb-3 mb-2 z-10">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-earth-americas text-goldGlyph"></i>
+            <h2 class="font-cinzel font-bold text-parchment text-sm tracking-wide">GLOBAL THREAT MAPPER & ROTATING SPHERE</h2>
+          </div>
+          <div class="flex items-center space-x-2 text-[11px] font-tech">
+            <span class="text-neonCrimson"><i class="fa-solid fa-circle text-[8px]"></i> High Risk</span>
+            <span class="text-neonAmber"><i class="fa-solid fa-circle text-[8px]"></i> Moderate</span>
+            <span class="text-neonCyan"><i class="fa-solid fa-circle text-[8px]"></i> Stable</span>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="relative flex-grow w-full h-[420px] rounded bg-obsidian/50 overflow-hidden" id="globeContainer">
+          <div class="scanline-overlay"></div>
+          
+          <!-- Interactive Quick Controls Overlay -->
+          <div class="absolute top-3 left-3 z-10 flex flex-col space-y-2">
+            <button onclick="resetGlobeCamera()" class="px-2.5 py-1 bg-stonePanel/80 border border-goldGlyph/30 rounded text-[11px] font-tech text-parchment hover:border-goldGlyph transition">
+              <i class="fa-solid fa-arrows-to-dot mr-1"></i> Reset View
+            </button>
+            <button onclick="toggleRotation()" id="rotBtn" class="px-2.5 py-1 bg-stonePanel/80 border border-goldGlyph/30 rounded text-[11px] font-tech text-parchment hover:border-goldGlyph transition">
+              <i class="fa-solid fa-pause mr-1"></i> Pause Spin
+            </button>
+          </div>
+
+          <!-- Globe Legend Overlay -->
+          <div class="absolute bottom-3 right-3 z-10 bg-stoneDark/90 border border-goldGlyph/30 p-2.5 rounded text-[10px] font-tech space-y-1">
+            <div class="text-goldGlyph font-semibold mb-1">Interactive Telemetry</div>
+            <div class="text-parchment/70">Click nodes to view Nation Codex</div>
+            <div class="text-parchment/70">Arc lines = Geopolitical Escalations</div>
+          </div>
+        </div>
+
+        <!-- Ticker Bar -->
+        <div class="mt-3 bg-obsidian border border-goldGlyph/20 p-2 rounded flex items-center text-xs font-tech overflow-hidden">
+          <span class="bg-neonCrimson/20 text-neonCrimson border border-neonCrimson/40 px-2 py-0.5 rounded font-bold uppercase text-[10px] shrink-0 mr-3">
+            <i class="fa-solid fa-bolt mr-1"></i> Live Ticker
+          </span>
+          <div class="truncate text-parchment/80">
+            [MIDDLE EAST]: Regional military readiness elevated. | [ASIA PACIFIC]: Cyber defense alerts in South China Sea. | [EUROPE]: EU Energy reserves stabilizing amid Nordic grid sync. | [LATAM]: Lithium corridor alliance discussions open.
+          </div>
+        </div>
+      </div>
+
+      <!-- JIMMY AI COGNITION & RISK INDEX (4 cols) -->
+      <div class="lg:col-span-4 space-y-6">
+        
+        <!-- RISK INDEX SCORE CARD -->
+        <div class="mayan-frame p-5 rounded-xl text-center relative">
+          <h3 class="font-cinzel text-xs font-bold text-goldGlyph uppercase tracking-widest mb-3">Global Risk Index</h3>
+          
+          <div class="relative w-36 h-36 mx-auto flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-stonePanel" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="text-neonAmber glyph-glow" stroke-dasharray="67, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            </svg>
+            <div class="absolute flex flex-col items-center">
+              <span class="font-cinzel text-3xl font-bold text-goldGlow">67</span>
+              <span class="text-[9px] font-tech text-neonAmber tracking-widest uppercase font-semibold">Elevated</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 mt-4 text-[11px] font-tech text-left">
+            <div class="bg-obsidian/70 p-2 rounded border border-goldGlyph/15">
+              <span class="text-parchment/60 block">Political Tension</span>
+              <span class="text-neonAmber font-bold">74% High</span>
+            </div>
+            <div class="bg-obsidian/70 p-2 rounded border border-goldGlyph/15">
+              <span class="text-parchment/60 block">Cyber / Tech Risk</span>
+              <span class="text-neonCyan font-bold">81% Severe</span>
+            </div>
+            <div class="bg-obsidian/70 p-2 rounded border border-goldGlyph/15">
+              <span class="text-parchment/60 block">Military Readiness</span>
+              <span class="text-neonCrimson font-bold">69% Elevated</span>
+            </div>
+            <div class="bg-obsidian/70 p-2 rounded border border-goldGlyph/15">
+              <span class="text-parchment/60 block">Trade Instability</span>
+              <span class="text-neonEmerald font-bold">48% Moderate</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- JIMMY AI LIVE INSIGHT CARD -->
+        <div class="mayan-frame p-5 rounded-xl space-y-3">
+          <div class="flex items-center justify-between border-b border-goldGlyph/20 pb-2">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-microchip text-neonCyan"></i>
+              <h3 class="font-cinzel text-xs font-bold text-goldGlow uppercase tracking-wider">JIMMY AI Live Cognition</h3>
+            </div>
+            <span class="text-[10px] font-tech text-neonCyan bg-neonCyan/10 px-2 py-0.5 rounded border border-neonCyan/30">ID:INVADED MATCH</span>
+          </div>
+
+          <div class="text-xs font-body leading-relaxed text-parchment/90 space-y-2 bg-obsidian/60 p-3 rounded border border-goldGlyph/20">
+            <p class="font-tech text-goldGlyph font-semibold">« Analytical Briefing 5789.42 »</p>
+            <p>
+              Multilateral psychological dissonance detected in Middle Eastern & Eurasian theaters. Self-perception of strategic security contrasts sharply with global perception of regional vulnerability.
+            </p>
+            <p class="text-parchment/70 text-[11px]">
+              Recommendation: Monitor cyber-physical energy grids in Nordics and Middle East maritime chokepoints.
+            </p>
+          </div>
+
+          <div class="pt-2 flex items-center justify-between text-[11px] font-tech">
+            <span class="text-parchment/60">Cross-Ref Matrix: <strong class="text-goldGlyph">98.4%</strong></span>
+            <button onclick="switchTab('codex')" class="text-neonCyan hover:underline">Open Full Codex →</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VIEW 2: PSYCHOLOGICAL & TRADE CODEX OF NATIONS (PLAYER BOARDS) -->
+    <div id="view-codex" class="hidden space-y-6">
+      <div class="mayan-frame p-5 rounded-xl">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-goldGlyph/20 pb-4 mb-4">
+          <div>
+            <h2 class="font-cinzel font-bold text-lg text-goldGlow">COMPREHENSIVE CODEX OF NATIONS</h2>
+            <p class="text-xs font-tech text-parchment/70">Psychological archetypes, trade matrices, identity dynamics, and Maya glyph alignments across all global powers.</p>
+          </div>
+
+          <!-- Region Filter Buttons -->
+          <div class="flex flex-wrap gap-1.5 font-tech text-xs" id="regionFilters">
+            <button onclick="filterCodex('ALL')" class="px-3 py-1 bg-goldGlyph text-obsidian rounded font-bold shadow">All Regions</button>
+            <button onclick="filterCodex('NORTH_AMERICA')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">North America</button>
+            <button onclick="filterCodex('LATAM')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">LatAm</button>
+            <button onclick="filterCodex('EUROPE')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">Europe & Nordics</button>
+            <button onclick="filterCodex('MIDDLE_EAST')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">Middle East & Muslim World</button>
+            <button onclick="filterCodex('ASIA')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">Asia & Pacific</button>
+            <button onclick="filterCodex('AFRICA')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">Africa</button>
+            <button onclick="filterCodex('EURASIA')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">Russia & Eurasia</button>
+          </div>
+        </div>
+
+        <!-- NATIONS GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="nationsGrid">
+          <!-- Nation Cards Dynamic Population via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: YAXCHE WORLD TREE SCENARIOS -->
+    <div id="view-scenarios" class="hidden space-y-6">
+      <div class="mayan-frame p-5 rounded-xl">
+        <div class="flex items-center justify-between border-b border-goldGlyph/20 pb-3 mb-4">
+          <div>
+            <h2 class="font-cinzel font-bold text-lg text-goldGlow">YAXCHE WORLD TREE SCENARIO MATRIX</h2>
+            <p class="text-xs font-tech text-parchment/70">Interactive divergence graph for future geopolitical branches and Stein;Gate worldline shifts.</p>
+          </div>
+          <span class="text-xs font-tech bg-goldGlyph/20 text-goldGlow px-3 py-1 rounded border border-goldGlyph/40">Div
