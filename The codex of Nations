@@ -1,0 +1,1527 @@
+```html
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ENIGMA 5789 + JIMMY AI :: Global Psychological & Geopolitical Engine</title>
+  
+  <!-- Tailwind CSS -->
+  <script src="https://cdn.tailwindcss.com"></script>
+  
+  <!-- Google Fonts: Cinzel Decorative, Space Grotesk, Inter -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel+Decorative:wght@400;700;900&family=Space+Grotesk:wght@300;400;600;700&family=Inter:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+  
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+  
+  <!-- Three.js (3D Globe) -->
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/three.js/r128/three.min.js"></script>
+
+  <script>
+    tailwind.config = {
+      theme: {
+        extend: {
+          colors: {
+            obsidian: '#0B0C0E',
+            stoneDark: '#121317',
+            stonePanel: '#1A1B20',
+            goldGlyph: '#C5A15B',
+            goldGlow: '#E5C178',
+            parchment: '#F0E0CE',
+            neonCyan: '#00F0FF',
+            neonAmber: '#FFB000',
+            neonEmerald: '#00FF9D',
+            neonCrimson: '#FF2A54'
+          },
+          fontFamily: {
+            cinzel: ['Cinzel Decorative', 'serif'],
+            tech: ['Space Grotesk', 'sans-serif'],
+            body: ['Inter', 'sans-serif']
+          }
+        }
+      }
+    }
+  </script>
+
+  <style>
+    /* Custom Obsidian Stone & Gold Styling */
+    body {
+      background-color: #0B0C0E;
+      color: #F0E0CE;
+      font-family: 'Inter', sans-serif;
+      overflow-x: hidden;
+      background-image: 
+        radial-gradient(circle at 50% 0%, rgba(197, 161, 91, 0.08) 0%, transparent 60%),
+        radial-gradient(circle at 80% 80%, rgba(0, 240, 255, 0.03) 0%, transparent 40%);
+    }
+
+    /* Maya Stone Frame Borders */
+    .mayan-frame {
+      border: 2px solid #C5A15B;
+      background: linear-gradient(145deg, #16171D, #101115);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.8), inset 0 0 15px rgba(197, 161, 91, 0.1);
+      position: relative;
+    }
+
+    .mayan-frame::before {
+      content: '❖';
+      position: absolute;
+      top: -10px;
+      left: 12px;
+      color: #C5A15B;
+      font-size: 12px;
+      background: #0B0C0E;
+      padding: 0 4px;
+    }
+
+    .mayan-frame::after {
+      content: '❖';
+      position: absolute;
+      bottom: -10px;
+      right: 12px;
+      color: #C5A15B;
+      font-size: 12px;
+      background: #0B0C0E;
+      padding: 0 4px;
+    }
+
+    /* Custom Scrollbar */
+    ::-webkit-scrollbar {
+      width: 6px;
+      height: 6px;
+    }
+    ::-webkit-scrollbar-track {
+      background: #101115;
+    }
+    ::-webkit-scrollbar-thumb {
+      background: #C5A15B;
+      border-radius: 3px;
+    }
+    ::-webkit-scrollbar-thumb:hover {
+      background: #E5C178;
+    }
+
+    /* Sci-Fi Glow Animations */
+    @keyframes pulseGlow {
+      0%, 100% { opacity: 0.6; filter: drop-shadow(0 0 5px rgba(197, 161, 91, 0.5)); }
+      50% { opacity: 1; filter: drop-shadow(0 0 15px rgba(197, 161, 91, 0.9)); }
+    }
+    .glyph-glow {
+      animation: pulseGlow 4s infinite ease-in-out;
+    }
+
+    @keyframes scanline {
+      0% { transform: translateY(-100%); }
+      100% { transform: translateY(1000%); }
+    }
+    .scanline-overlay {
+      position: absolute;
+      top: 0; left: 0; right: 0; bottom: 0;
+      background: linear-gradient(to bottom, transparent 50%, rgba(0, 240, 255, 0.03) 51%);
+      background-size: 100% 4px;
+      pointer-events: none;
+    }
+
+    /* Canvas styling */
+    canvas {
+      outline: none;
+    }
+
+    /* Tooltip */
+    .tooltip {
+      position: absolute;
+      padding: 8px 12px;
+      background: rgba(18, 19, 23, 0.95);
+      border: 1px solid #C5A15B;
+      color: #F0E0CE;
+      font-size: 12px;
+      border-radius: 4px;
+      pointer-events: none;
+      z-index: 100;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.8);
+      display: none;
+    }
+  </style>
+</head>
+<body class="min-h-screen flex flex-col">
+
+  <div id="tooltip" class="tooltip font-tech"></div>
+
+  <!-- MAIN HEADER -->
+  <header class="border-b border-goldGlyph/30 bg-stoneDark/90 backdrop-blur sticky top-0 z-50">
+    <div class="max-w-7xl mx-auto px-4 py-3 flex flex-wrap items-center justify-between gap-4">
+      
+      <!-- Brand & Eye Symbol -->
+      <div class="flex items-center space-x-3">
+        <div class="w-10 h-10 rounded-full border-2 border-goldGlyph flex items-center justify-center bg-obsidian glyph-glow cursor-pointer" onclick="switchTab('globe')">
+          <i class="fa-solid font-cinzel text-goldGlyph text-xl">👁</i>
+        </div>
+        <div>
+          <div class="flex items-center space-x-2">
+            <h1 class="font-cinzel font-bold text-xl tracking-wider text-goldGlyph">ENIGMA 5789</h1>
+            <span class="text-xs font-tech bg-neonCyan/10 text-neonCyan px-2 py-0.5 rounded border border-neonCyan/30">JIMMY AI v4.8</span>
+          </div>
+          <p class="text-[10px] font-tech text-parchment/60 tracking-widest uppercase">Psychological Geopolitical Cognition Engine</p>
+        </div>
+      </div>
+
+      <!-- Tzolkin Long Count & Gregorian Bar -->
+      <div class="flex items-center space-x-4 bg-obsidian px-4 py-1.5 rounded-lg border border-goldGlyph/30 font-tech text-xs">
+        <div class="text-center">
+          <span class="block text-[9px] text-parchment/50 uppercase">Mayan Long Count</span>
+          <span class="text-goldGlow font-semibold">13.0.12.8.7</span>
+        </div>
+        <div class="h-6 w-[1px] bg-goldGlyph/30"></div>
+        <div class="text-center">
+          <span class="block text-[9px] text-parchment/50 uppercase">Tzolkin Date</span>
+          <span class="text-neonCyan font-semibold">8 CHUEN (Monkey)</span>
+        </div>
+        <div class="h-6 w-[1px] bg-goldGlyph/30"></div>
+        <div class="text-center">
+          <span class="block text-[9px] text-parchment/50 uppercase">Gregorian Time</span>
+          <span id="liveClock" class="text-parchment font-semibold">--- --:--:-- UTC</span>
+        </div>
+      </div>
+
+      <!-- Sci-Fi System Status -->
+      <div class="hidden lg:flex items-center space-x-3 text-xs font-tech">
+        <div class="flex items-center space-x-1.5">
+          <span class="w-2 h-2 rounded-full bg-neonEmerald animate-ping"></span>
+          <span class="text-neonEmerald">Cognition: Synced</span>
+        </div>
+        <div class="bg-stonePanel px-2.5 py-1 rounded border border-goldGlyph/20 text-parchment/80">
+          Neural Nodes: <span class="text-goldGlyph font-bold">142/142</span>
+        </div>
+      </div>
+
+    </div>
+
+    <!-- NAVIGATION TABS -->
+    <nav class="bg-stonePanel/80 border-t border-goldGlyph/20 px-4">
+      <div class="max-w-7xl mx-auto flex items-center space-x-1 overflow-x-auto py-1 text-xs font-tech text-parchment/70">
+        <button onclick="switchTab('globe')" id="tab-globe" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-goldGlyph text-goldGlow font-semibold">
+          <i class="fa-solid fa-globe"></i><span>3D Risk Globe</span>
+        </button>
+        <button onclick="switchTab('codex')" id="tab-codex" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-transparent">
+          <i class="fa-solid fa-book-journal-whills"></i><span>Codex of Nations</span>
+        </button>
+        <button onclick="switchTab('scenarios')" id="tab-scenarios" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-transparent">
+          <i class="fa-solid fa-sitemap"></i><span>Yaxche World Tree</span>
+        </button>
+        <button onclick="switchTab('calendar')" id="tab-calendar" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-transparent">
+          <i class="fa-solid fa-dharmachakra"></i><span>Tzol'kin Calendar</span>
+        </button>
+        <button onclick="switchTab('evidence')" id="tab-evidence" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-transparent">
+          <i class="fa-solid fa-list-check"></i><span>Evidence Ledger</span>
+        </button>
+        <button onclick="switchTab('townhall')" id="tab-townhall" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-transparent">
+          <i class="fa-solid fa-users-rays"></i><span>Town Hall Assembly</span>
+        </button>
+        <button onclick="switchTab('forecast')" id="tab-forecast" class="px-4 py-2 rounded-md hover:bg-goldGlyph/10 hover:text-goldGlow transition flex items-center space-x-2 border-b-2 border-transparent">
+          <i class="fa-solid fa-chart-line"></i><span>Forecast Review</span>
+        </button>
+      </div>
+    </nav>
+  </header>
+
+  <!-- QUOTE BAR -->
+  <div class="bg-obsidian border-b border-goldGlyph/20 py-1.5 px-4 text-center">
+    <p class="font-cinzel text-xs text-goldGlyph/90 italic tracking-wider">
+      "The future is not written. It is calculated — and can be changed." <span class="mx-3 text-parchment/30">|</span> "Truth lives in the details."
+    </p>
+  </div>
+
+  <!-- MAIN CONTAINER -->
+  <main class="flex-grow max-w-7xl w-full mx-auto p-4 sm:p-6 space-y-6">
+
+    <!-- VIEW 1: 3D GLOBE & LIVE COGNITION PANEL -->
+    <div id="view-globe" class="grid grid-cols-1 lg:grid-cols-12 gap-6">
+      
+      <!-- 3D GLOBE CONTAINER (8 cols) -->
+      <div class="lg:col-span-8 mayan-frame p-4 rounded-xl flex flex-col relative min-h-[520px]">
+        <div class="flex items-center justify-between border-b border-goldGlyph/20 pb-3 mb-2 z-10">
+          <div class="flex items-center space-x-2">
+            <i class="fa-solid fa-earth-americas text-goldGlyph"></i>
+            <h2 class="font-cinzel font-bold text-parchment text-sm tracking-wide">GLOBAL THREAT MAPPER & ROTATING SPHERE</h2>
+          </div>
+          <div class="flex items-center space-x-2 text-[11px] font-tech">
+            <span class="text-neonCrimson"><i class="fa-solid fa-circle text-[8px]"></i> High Risk</span>
+            <span class="text-neonAmber"><i class="fa-solid fa-circle text-[8px]"></i> Moderate</span>
+            <span class="text-neonCyan"><i class="fa-solid fa-circle text-[8px]"></i> Stable</span>
+          </div>
+        </div>
+
+        <!-- Canvas Container -->
+        <div class="relative flex-grow w-full h-[420px] rounded bg-obsidian/50 overflow-hidden" id="globeContainer">
+          <div class="scanline-overlay"></div>
+          
+          <!-- Interactive Quick Controls Overlay -->
+          <div class="absolute top-3 left-3 z-10 flex flex-col space-y-2">
+            <button onclick="resetGlobeCamera()" class="px-2.5 py-1 bg-stonePanel/80 border border-goldGlyph/30 rounded text-[11px] font-tech text-parchment hover:border-goldGlyph transition">
+              <i class="fa-solid fa-arrows-to-dot mr-1"></i> Reset View
+            </button>
+            <button onclick="toggleRotation()" id="rotBtn" class="px-2.5 py-1 bg-stonePanel/80 border border-goldGlyph/30 rounded text-[11px] font-tech text-parchment hover:border-goldGlyph transition">
+              <i class="fa-solid fa-pause mr-1"></i> Pause Spin
+            </button>
+          </div>
+
+          <!-- Globe Legend Overlay -->
+          <div class="absolute bottom-3 right-3 z-10 bg-stoneDark/90 border border-goldGlyph/30 p-2.5 rounded text-[10px] font-tech space-y-1">
+            <div class="text-goldGlyph font-semibold mb-1">Interactive Telemetry</div>
+            <div class="text-parchment/70">Click nodes to view Nation Codex</div>
+            <div class="text-parchment/70">Arc lines = Geopolitical Escalations</div>
+          </div>
+        </div>
+
+        <!-- Ticker Bar -->
+        <div class="mt-3 bg-obsidian border border-goldGlyph/20 p-2 rounded flex items-center text-xs font-tech overflow-hidden">
+          <span class="bg-neonCrimson/20 text-neonCrimson border border-neonCrimson/40 px-2 py-0.5 rounded font-bold uppercase text-[10px] shrink-0 mr-3">
+            <i class="fa-solid fa-bolt mr-1"></i> Live Ticker
+          </span>
+          <div class="truncate text-parchment/80">
+            [MIDDLE EAST]: Regional military readiness elevated. | [ASIA PACIFIC]: Cyber defense alerts in South China Sea. | [EUROPE]: EU Energy reserves stabilizing amid Nordic grid sync. | [LATAM]: Lithium corridor alliance discussions open.
+          </div>
+        </div>
+      </div>
+
+      <!-- JIMMY AI COGNITION & RISK INDEX (4 cols) -->
+      <div class="lg:col-span-4 space-y-6">
+        
+        <!-- RISK INDEX SCORE CARD -->
+        <div class="mayan-frame p-5 rounded-xl text-center relative">
+          <h3 class="font-cinzel text-xs font-bold text-goldGlyph uppercase tracking-widest mb-3">Global Risk Index</h3>
+          
+          <div class="relative w-36 h-36 mx-auto flex items-center justify-center">
+            <svg class="w-full h-full transform -rotate-90" viewBox="0 0 36 36">
+              <path class="text-stonePanel" stroke-width="3.5" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+              <path class="text-neonAmber glyph-glow" stroke-dasharray="67, 100" stroke-width="3.5" stroke-linecap="round" stroke="currentColor" fill="none" d="M18 2.0845 a 15.9155 15.9155 0 0 1 0 31.831 a 15.9155 15.9155 0 0 1 0 -31.831" />
+            </svg>
+            <div class="absolute flex flex-col items-center">
+              <span class="font-cinzel text-3xl font-bold text-goldGlow">67</span>
+              <span class="text-[9px] font-tech text-neonAmber tracking-widest uppercase font-semibold">Elevated</span>
+            </div>
+          </div>
+
+          <div class="grid grid-cols-2 gap-2 mt-4 text-[11px] font-tech text-left">
+            <div class="bg-obsidian/70 p-2 rounded border border-goldGlyph/15">
+              <span class="text-parchment/60 block">Political Tension</span>
+              <span class="text-neonAmber font-bold">74% High</span>
+            </div>
+            <div class="bg-obsidian/70 p-2 rounded border border-goldGlyph/15">
+              <span class="text-parchment/60 block">Cyber / Tech Risk</span>
+              <span class="text-neonCyan font-bold">81% Severe</span>
+            </div>
+            <div class="bg-obsidian/70 p-2 rounded border border-goldGlyph/15">
+              <span class="text-parchment/60 block">Military Readiness</span>
+              <span class="text-neonCrimson font-bold">69% Elevated</span>
+            </div>
+            <div class="bg-obsidian/70 p-2 rounded border border-goldGlyph/15">
+              <span class="text-parchment/60 block">Trade Instability</span>
+              <span class="text-neonEmerald font-bold">48% Moderate</span>
+            </div>
+          </div>
+        </div>
+
+        <!-- JIMMY AI LIVE INSIGHT CARD -->
+        <div class="mayan-frame p-5 rounded-xl space-y-3">
+          <div class="flex items-center justify-between border-b border-goldGlyph/20 pb-2">
+            <div class="flex items-center space-x-2">
+              <i class="fa-solid fa-microchip text-neonCyan"></i>
+              <h3 class="font-cinzel text-xs font-bold text-goldGlow uppercase tracking-wider">JIMMY AI Live Cognition</h3>
+            </div>
+            <span class="text-[10px] font-tech text-neonCyan bg-neonCyan/10 px-2 py-0.5 rounded border border-neonCyan/30">ID:INVADED MATCH</span>
+          </div>
+
+          <div class="text-xs font-body leading-relaxed text-parchment/90 space-y-2 bg-obsidian/60 p-3 rounded border border-goldGlyph/20">
+            <p class="font-tech text-goldGlyph font-semibold">« Analytical Briefing 5789.42 »</p>
+            <p>
+              Multilateral psychological dissonance detected in Middle Eastern & Eurasian theaters. Self-perception of strategic security contrasts sharply with global perception of regional vulnerability.
+            </p>
+            <p class="text-parchment/70 text-[11px]">
+              Recommendation: Monitor cyber-physical energy grids in Nordics and Middle East maritime chokepoints.
+            </p>
+          </div>
+
+          <div class="pt-2 flex items-center justify-between text-[11px] font-tech">
+            <span class="text-parchment/60">Cross-Ref Matrix: <strong class="text-goldGlyph">98.4%</strong></span>
+            <button onclick="switchTab('codex')" class="text-neonCyan hover:underline">Open Full Codex →</button>
+          </div>
+        </div>
+
+      </div>
+    </div>
+
+    <!-- VIEW 2: PSYCHOLOGICAL & TRADE CODEX OF NATIONS (PLAYER BOARDS) -->
+    <div id="view-codex" class="hidden space-y-6">
+      <div class="mayan-frame p-5 rounded-xl">
+        <div class="flex flex-col md:flex-row items-start md:items-center justify-between gap-4 border-b border-goldGlyph/20 pb-4 mb-4">
+          <div>
+            <h2 class="font-cinzel font-bold text-lg text-goldGlow">COMPREHENSIVE CODEX OF NATIONS</h2>
+            <p class="text-xs font-tech text-parchment/70">Psychological archetypes, trade matrices, identity dynamics, and Maya glyph alignments across all global powers.</p>
+          </div>
+
+          <!-- Region Filter Buttons -->
+          <div class="flex flex-wrap gap-1.5 font-tech text-xs" id="regionFilters">
+            <button onclick="filterCodex('ALL')" class="px-3 py-1 bg-goldGlyph text-obsidian rounded font-bold shadow">All Regions</button>
+            <button onclick="filterCodex('NORTH_AMERICA')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">North America</button>
+            <button onclick="filterCodex('LATAM')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">LatAm</button>
+            <button onclick="filterCodex('EUROPE')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">Europe & Nordics</button>
+            <button onclick="filterCodex('MIDDLE_EAST')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">Middle East & Muslim World</button>
+            <button onclick="filterCodex('ASIA')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">Asia & Pacific</button>
+            <button onclick="filterCodex('AFRICA')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">Africa</button>
+            <button onclick="filterCodex('EURASIA')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/30 rounded hover:border-goldGlyph">Russia & Eurasia</button>
+          </div>
+        </div>
+
+        <!-- NATIONS GRID -->
+        <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6" id="nationsGrid">
+          <!-- Nation Cards Dynamic Population via JS -->
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 3: YAXCHE WORLD TREE SCENARIOS -->
+    <div id="view-scenarios" class="hidden space-y-6">
+      <div class="mayan-frame p-5 rounded-xl">
+        <div class="flex items-center justify-between border-b border-goldGlyph/20 pb-3 mb-4">
+          <div>
+            <h2 class="font-cinzel font-bold text-lg text-goldGlow">YAXCHE WORLD TREE SCENARIO MATRIX</h2>
+            <p class="text-xs font-tech text-parchment/70">Interactive divergence graph for future geopolitical branches and Stein;Gate worldline shifts.</p>
+          </div>
+          <span class="text-xs font-tech bg-goldGlyph/20 text-goldGlow px-3 py-1 rounded border border-goldGlyph/40">Divergence: 1.048596%</span>
+        </div>
+
+        <div class="relative w-full h-[500px] bg-obsidian rounded border border-goldGlyph/20 overflow-hidden" id="treeContainer">
+          <canvas id="yaxcheCanvas" class="w-full h-full"></canvas>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 4: TZOL'KIN CALENDAR WHEEL -->
+    <div id="view-calendar" class="hidden space-y-6">
+      <div class="mayan-frame p-5 rounded-xl flex flex-col items-center">
+        <div class="text-center mb-4">
+          <h2 class="font-cinzel font-bold text-lg text-goldGlow">TZOL'KIN CONCENTRIC GLYPH WHEEL</h2>
+          <p class="text-xs font-tech text-parchment/70">Sacred 260-day calendar synchronization engine aligned with geopolitical momentum cycles.</p>
+        </div>
+
+        <div class="relative w-[340px] sm:w-[450px] h-[340px] sm:h-[450px] flex items-center justify-center my-4">
+          <canvas id="tzolkinCanvas" class="w-full h-full"></canvas>
+        </div>
+
+        <div class="grid grid-cols-1 sm:grid-cols-3 gap-4 w-full max-w-2xl mt-4 text-xs font-tech">
+          <div class="bg-obsidian/80 p-3 rounded border border-goldGlyph/30 text-center">
+            <span class="text-goldGlyph font-semibold block">Solar Kin Cycle</span>
+            <span class="text-parchment text-sm">Kin 148 - Yellow Star</span>
+          </div>
+          <div class="bg-obsidian/80 p-3 rounded border border-goldGlyph/30 text-center">
+            <span class="text-neonCyan font-semibold block">Venus Synchronization</span>
+            <span class="text-parchment text-sm">Morning Star Phase</span>
+          </div>
+          <div class="bg-obsidian/80 p-3 rounded border border-goldGlyph/30 text-center">
+            <span class="text-neonAmber font-semibold block">Baktun Momentum</span>
+            <span class="text-parchment text-sm">13th Baktun Shift</span>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 5: EVIDENCE LEDGER -->
+    <div id="view-evidence" class="hidden space-y-6">
+      <div class="mayan-frame p-5 rounded-xl">
+        <div class="flex flex-col sm:flex-row items-start sm:items-center justify-between gap-3 border-b border-goldGlyph/20 pb-3 mb-4">
+          <div>
+            <h2 class="font-cinzel font-bold text-lg text-goldGlow">EVIDENCE LEDGER & KILL-TEST ADVISORY</h2>
+            <p class="text-xs font-tech text-parchment/70">Rigorous intelligence classification and verification framework.</p>
+          </div>
+          
+          <div class="flex items-center space-x-2 text-xs font-tech">
+            <button onclick="filterEvidence('ALL')" class="px-3 py-1 bg-goldGlyph text-obsidian rounded font-bold">All</button>
+            <button onclick="filterEvidence('Observation')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/20 rounded">Observation</button>
+            <button onclick="filterEvidence('Hypothesis')" class="px-3 py-1 bg-stonePanel text-parchment border border-goldGlyph/20 rounded">Hypothesis</button>
+          </div>
+        </div>
+
+        <div class="overflow-x-auto">
+          <table class="w-full text-left text-xs font-tech border-collapse">
+            <thead>
+              <tr class="bg-stonePanel text-goldGlyph border-b border-goldGlyph/30">
+                <th class="p-3">ID</th>
+                <th class="p-3">Classification</th>
+                <th class="p-3">Title / Core Claim</th>
+                <th class="p-3">Target Region</th>
+                <th class="p-3">Confidence Score</th>
+                <th class="p-3">Status</th>
+              </tr>
+            </thead>
+            <tbody id="evidenceTableBody" class="divide-y divide-goldGlyph/10 text-parchment/80">
+              <!-- Dynamically Populated -->
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 6: TOWN HALL ASSEMBLY -->
+    <div id="view-townhall" class="hidden space-y-6">
+      <div class="mayan-frame p-5 rounded-xl">
+        <div class="border-b border-goldGlyph/20 pb-3 mb-4">
+          <h2 class="font-cinzel font-bold text-lg text-goldGlow">GLOBAL TOWN HALL ASSEMBLY</h2>
+          <p class="text-xs font-tech text-parchment/70">Community debates with anime psychological avatars & consensus voting.</p>
+        </div>
+
+        <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+          <div class="lg:col-span-2 space-y-4" id="townhallThreads">
+            <!-- Dynamic Threads -->
+          </div>
+
+          <div class="space-y-4">
+            <div class="bg-obsidian/80 p-4 rounded border border-goldGlyph/30 font-tech">
+              <h3 class="text-goldGlow font-bold text-sm mb-2"><i class="fa-solid fa-comments mr-2"></i>Post New Topic</h3>
+              <input type="text" id="newThreadTitle" placeholder="Topic Title..." class="w-full bg-stoneDark border border-goldGlyph/30 rounded p-2 text-xs text-parchment mb-2 focus:outline-none focus:border-goldGlyph">
+              <textarea id="newThreadBody" rows="3" placeholder="Psychological analysis or claim..." class="w-full bg-stoneDark border border-goldGlyph/30 rounded p-2 text-xs text-parchment mb-2 focus:outline-none focus:border-goldGlyph"></textarea>
+              <button onclick="addTownHallTopic()" class="w-full bg-goldGlyph hover:bg-goldGlow text-obsidian font-bold py-2 rounded text-xs transition">Submit to Assembly</button>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <!-- VIEW 7: FORECAST REVIEW -->
+    <div id="view-forecast" class="hidden space-y-6">
+      <div class="mayan-frame p-5 rounded-xl">
+        <div class="border-b border-goldGlyph/20 pb-3 mb-4">
+          <h2 class="font-cinzel font-bold text-lg text-goldGlow">PROBABILISTIC FORECAST REVIEW</h2>
+          <p class="text-xs font-tech text-parchment/70">Longitudinal evaluation of Jimmy AI predictive models and confidence trendlines.</p>
+        </div>
+
+        <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+          <div class="bg-obsidian/80 p-4 rounded border border-goldGlyph/30">
+            <h3 class="font-cinzel text-sm text-goldGlow mb-3">Model Accuracy Trend</h3>
+            <canvas id="forecastChart" class="w-full h-60"></canvas>
+          </div>
+
+          <div class="bg-obsidian/80 p-4 rounded border border-goldGlyph/30 space-y-3 font-tech text-xs">
+            <h3 class="font-cinzel text-sm text-goldGlow mb-3">Core Strategic Forecasts</h3>
+            
+            <div class="border-b border-goldGlyph/15 pb-2">
+              <div class="flex justify-between text-parchment">
+                <span>Middle East Multi-Node Diplomacy</span>
+                <span class="text-neonEmerald font-bold">78% Probability</span>
+              </div>
+              <p class="text-parchment/60 text-[11px] mt-1">Expected realignment of trade and diplomatic channels over 12-month horizon.</p>
+            </div>
+
+            <div class="border-b border-goldGlyph/15 pb-2">
+              <div class="flex justify-between text-parchment">
+                <span>AI & Quantum Cyber Infrastructure Expansion</span>
+                <span class="text-neonCyan font-bold">92% Probability</span>
+              </div>
+              <p class="text-parchment/60 text-[11px] mt-1">Accelerated deployment of defense AI in EU, Nordics, and East Asia.</p>
+            </div>
+
+            <div>
+              <div class="flex justify-between text-parchment">
+                <span>Global Renewable Energy Grid Synergies</span>
+                <span class="text-neonAmber font-bold">64% Probability</span>
+              </div>
+              <p class="text-parchment/60 text-[11px] mt-1">South American and Pan-African energy export initiatives gaining momentum.</p>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+
+  </main>
+
+  <!-- FOOTER -->
+  <footer class="border-t border-goldGlyph/20 bg-stoneDark/90 py-4 px-6 text-center text-xs font-tech text-parchment/50">
+    <div class="max-w-7xl mx-auto flex flex-col sm:flex-row items-center justify-between gap-2">
+      <div>
+        <span class="text-goldGlyph font-cinzel font-bold">ENIGMA 5789 + JIMMY AI</span> — Mayan Sci-Fi Intelligence System
+      </div>
+      <div>
+        Inspired by <span class="text-parchment/80">Ghost in the Shell, Steins;Gate, ID:Invaded, 20th Century Boys, SAO</span>
+      </div>
+    </div>
+  </footer>
+
+  <!-- SCRIPT LOGIC -->
+  <script>
+    // --- NATION DATA ARCHETYPES (COVERING ALL REQUESTED REGIONS) ---
+    const NATIONS_DATA = [
+      {
+        id: 'usa',
+        name: 'United States',
+        region: 'NORTH_AMERICA',
+        archetype: 'The Astral Sovereign',
+        theme: 'High-Tech Hegemon & Sci-Fi Titan',
+        glyph: 'IK (Wind / Breath)',
+        selfPerception: 'Universal Beacon of Freedom, Innovation, and Defending Order.',
+        globalPerception: 'Dominant Technocratic Hyperpower balancing influence and domestic tension.',
+        coreDrivers: ['Technological Primacy', 'Global Maritime Power', 'Financial Reserve Status'],
+        exports: ['Advanced AI Systems', 'Defense Hardware', 'Aerospace', 'Financial Services'],
+        imports: ['Rare Earth Metals', 'Consumer Electronics', 'Precision Machinery'],
+        allies: ['UK', 'Canada', 'EU', 'Japan', 'Israel', 'Australia'],
+        rivals: ['China', 'Russia', 'Iran'],
+        riskScore: 68,
+        lat: 38.8951, lon: -77.0364
+      },
+      {
+        id: 'canada',
+        name: 'Canada',
+        region: 'NORTH_AMERICA',
+        archetype: 'The Boreas Sentinel',
+        theme: 'Resource Vault & Peaceful Shield',
+        glyph: 'CIMI (Worldbridger / Transformation)',
+        selfPerception: 'Ethical Global Mediator, Steward of Pristine Wilderness.',
+        globalPerception: 'Stable Resource Guarantor & Essential Arctic Sentinel.',
+        coreDrivers: ['Arctic Sovereignty', 'Resource Equilibrium', 'Multilateral Stability'],
+        exports: ['Clean Energy & Uranium', 'Potash & Agriculture', 'Timber & Metals'],
+        imports: ['High-Tech Electronics', 'Automotive Parts', 'Consumer Goods'],
+        allies: ['USA', 'UK', 'EU', 'Japan', 'Nordics'],
+        rivals: ['Arctic Competitors'],
+        riskScore: 28,
+        lat: 45.4215, lon: -75.6972
+      },
+      {
+        id: 'mexico',
+        name: 'Mexico',
+        region: 'NORTH_AMERICA',
+        archetype: 'The Solar Serpent',
+        theme: 'Sun Codex & Cultural Crossroads',
+        glyph: 'KAN (Seed / Abundance)',
+        selfPerception: 'Cradle of Ancient Civilizations, Vital Industrial Bridge.',
+        globalPerception: 'Manufacturing Engine & Trade Nexus of the Americas.',
+        coreDrivers: ['Nearshoring Growth', 'Cultural Heritage Preservation', 'Economic Integration'],
+        exports: ['Automotives', 'Electronics', 'Silver & Mining', 'Agri-products'],
+        imports: ['Refined Fuel', 'Industrial Components', 'Semiconductors'],
+        allies: ['USA', 'Canada', 'Central & South America'],
+        rivals: ['Supply Chain Competitors'],
+        riskScore: 52,
+        lat: 19.4326, lon: -99.1332
+      },
+      {
+        id: 'central_america',
+        name: 'Central America Union',
+        region: 'LATAM',
+        archetype: 'The Jade Isthmus',
+        theme: 'Strategic Passage & Ancient Guardian',
+        glyph: 'LAMAT (Venus / Star)',
+        selfPerception: 'Vital Physical Connector of Oceans and Human Cultures.',
+        globalPerception: 'Strategic Trade Corridor and Ecological Hotspot.',
+        coreDrivers: ['Canal Logistics', 'Agricultural Resilience', 'Regional Unity'],
+        exports: ['Coffee & Agriculture', 'Logistics Services', 'Textiles'],
+        imports: ['Energy', 'Machinery', 'Consumer Electronics'],
+        allies: ['USA', 'Mexico', 'South America'],
+        rivals: ['Logistics Disruptors'],
+        riskScore: 48,
+        lat: 9.0, lon: -79.5
+      },
+      {
+        id: 'brazil',
+        name: 'Brazil',
+        region: 'LATAM',
+        archetype: 'The Amazonian Glyphkeeper',
+        theme: 'Ecological Giant & Agricultural Titan',
+        glyph: 'EB (Human / Sacred Road)',
+        selfPerception: 'Global Ecological Steward and Sovereign Agricultural Power.',
+        globalPerception: 'Environmental Benchmark & South American Economic Anchor.',
+        coreDrivers: ['Rainforest Stewardship', 'Agribusiness Leadership', 'Global Trade Sovereignty'],
+        exports: ['Soybeans & Agriculture', 'Iron Ore', 'Embraer Aircraft', 'Biofuels'],
+        imports: ['Fertilizers', 'Refined Petroleum', 'Semiconductors'],
+        allies: ['Argentina', 'China', 'EU', 'USA'],
+        rivals: ['Agrarian Competitors'],
+        riskScore: 42,
+        lat: -15.7975, lon: -47.8919
+      },
+      {
+        id: 'argentina',
+        name: 'Argentina & South America',
+        region: 'LATAM',
+        archetype: 'The Pampas Alchemist',
+        theme: 'Agrarian & Lithium Pioneer',
+        glyph: 'BEN (Reed / Pillars of Sky)',
+        selfPerception: 'Intellectual & Cultural Hub with Boundless Natural Energy.',
+        globalPerception: 'Crucial Mineral & Food Basket for Global Markets.',
+        coreDrivers: ['Lithium Triangle Leadership', 'Economic Stabilization', 'Agrarian Export'],
+        exports: ['Lithium & Minerals', 'Beef & Grain', 'Natural Gas'],
+        imports: ['Industrial Equipment', 'Automotives', 'Electronics'],
+        allies: ['Brazil', 'Chile', 'EU', 'USA'],
+        rivals: ['None Strategic'],
+        riskScore: 56,
+        lat: -34.6037, lon: -58.3816
+      },
+      {
+        id: 'eu',
+        name: 'European Union',
+        region: 'EUROPE',
+        archetype: 'The Union Codex',
+        theme: 'Bureaucratic Cyber-Colossus',
+        glyph: 'MEN (Eagle / High Vision)',
+        selfPerception: 'Champion of Human Rights, Green Transition, and Standards.',
+        globalPerception: 'Regulatory Powerhouse balancing energy transition and unity.',
+        coreDrivers: ['Regulatory Standard Setting', 'Green Transition', 'Digital Sovereignty'],
+        exports: ['Precision Machinery', 'Luxury Goods', 'Pharmaceuticals', 'Automotives'],
+        imports: ['Energy & LNG', 'Rare Earth Metals', 'Consumer Tech'],
+        allies: ['USA', 'UK', 'Nordics', 'Japan'],
+        rivals: ['Russia', 'Systemic Cyber Threats'],
+        riskScore: 45,
+        lat: 50.8503, lon: 4.3517
+      },
+      {
+        id: 'uk',
+        name: 'United Kingdom',
+        region: 'EUROPE',
+        archetype: 'The Sovereign Anchor',
+        theme: 'Maritime & Financial Citadel',
+        glyph: 'CIB (Wisdom / Trust)',
+        selfPerception: 'Historic Maritime Pathfinder & Financial Intelligence Center.',
+        globalPerception: 'Key Intelligence Hub and Global Capital Catalyst.',
+        coreDrivers: ['Financial Engineering', 'Defense Technology', 'Global Diplomatic Reach'],
+        exports: ['Financial Services', 'Aerospace', 'Pharmaceuticals', 'Defense Tech'],
+        imports: ['Agricultural Products', 'Consumer Electronics', 'Manufactured Goods'],
+        allies: ['USA', 'EU', 'Japan', 'Commonwealth Nations'],
+        rivals: ['Strategic Adversaries'],
+        riskScore: 38,
+        lat: 51.5074, lon: -0.1278
+      },
+      {
+        id: 'nordics',
+        name: 'Sweden & Denmark (Nordics)',
+        region: 'EUROPE',
+        archetype: 'The Cyber-Viking Matrix',
+        theme: 'High-Tech Welfare & Defense Technocracy',
+        glyph: 'CABAN (Earth / Cosmic Synchrony)',
+        selfPerception: 'Model of Human Innovation, Clean Tech, and Resilience.',
+        globalPerception: 'Pinnacle of High-Tech Social Systems & Advanced Defense Hardware.',
+        coreDrivers: ['Clean Tech Innovation', 'Cyber Defense Infrastructure', 'Social Trust Matrix'],
+        exports: ['Advanced Defense (Gripen/Submarines)', 'Clean Energy Tech', 'Software & Biotech'],
+        imports: ['Heavy Industrial Goods', 'Electronics'],
+        allies: ['EU', 'USA', 'UK'],
+        rivals: ['Cyber Aggressors'],
+        riskScore: 24,
+        lat: 59.3293, lon: 18.0686
+      },
+      {
+        id: 'israel',
+        name: 'Israel',
+        region: 'MIDDLE_EAST',
+        archetype: 'The Iron Citadel',
+        theme: 'Cyber-Defensive Fortress & Tech Crucible',
+        glyph: 'ETZNAB (Flint / Blade of Truth)',
+        selfPerception: 'Indomitable Safe-Haven & High-Tech Fortress of Survival.',
+        globalPerception: 'Hyper-Advanced Cyber Security & Defense Innovation Center.',
+        coreDrivers: ['Existential Defense Security', 'Cyber-Intelligence Leadership', 'Tech Entrepreneurship'],
+        exports: ['Cybersecurity Systems', 'Defense Hardware', 'Agritech', 'Semiconductors'],
+        imports: ['Raw Energy', 'Heavy Industrial Machinery', 'Grain'],
+        allies: ['USA', 'Abraham Accords Partners'],
+        rivals: ['Iran', 'Regional Militant Proxies'],
+        riskScore: 88,
+        lat: 31.7683, lon: 35.2137
+      },
+      {
+        id: 'palestine',
+        name: 'Palestine',
+        region: 'MIDDLE_EAST',
+        archetype: 'The Olive Phoenix',
+        theme: 'Resilience, Roots & Identity Sentinel',
+        glyph: 'CAUAC (Storm / Purification)',
+        selfPerception: 'Unyielding Guardian of Ancient Roots and Human Dignity.',
+        globalPerception: 'Symbol of Geopolitical Conflict & Quest for Sovereignty.',
+        coreDrivers: ['Sovereignty Recognition', 'Cultural Preservation', 'Human Security'],
+        exports: ['Olive Oil', 'Artisanal Crafts', 'Agricultural Goods'],
+        imports: ['Basic Utilities', 'Construction Materials', 'Food Supplies'],
+        allies: ['Arab League', 'Muslim World', 'Global South'],
+        rivals: ['Israel'],
+        riskScore: 92,
+        lat: 31.9522, lon: 35.2332
+      },
+      {
+        id: 'lebanon',
+        name: 'Lebanon',
+        region: 'MIDDLE_EAST',
+        archetype: 'The Cedar Oracle',
+        theme: 'Financial & Cultural Crossroads Node',
+        glyph: 'AHAU (Sun / Enlightenment)',
+        selfPerception: 'Cultural Masterpiece of the Levant & Resilient Beacon.',
+        globalPerception: 'Complex Geopolitical Intersection under Economic Strain.',
+        coreDrivers: ['Banking Reconstruction', 'Diaspora Energy Integration', 'Cultural Heritage'],
+        exports: ['Agri-Products', 'Jewelry', 'Chemical Products'],
+        imports: ['Refined Fuel', 'Pharmaceuticals', 'Vehicles'],
+        allies: ['Arab Partners', 'EU', 'Diaspora Networks'],
+        rivals: ['Internal & Border Instability'],
+        riskScore: 82,
+        lat: 33.8938, lon: 35.5018
+      },
+      {
+        id: 'iran',
+        name: 'Iran',
+        region: 'MIDDLE_EAST',
+        archetype: 'The Persian Weaver',
+        theme: 'Geopolitical Chessmaster & Asymmetric Sovereign',
+        glyph: 'IMIX (Dragon / Primordial Mother)',
+        selfPerception: 'Heir to Millennia of Empire, Defiant Defender of Sovereignty.',
+        globalPerception: 'Asymmetric Regional Power with Deep Geopolitical Networks.',
+        coreDrivers: ['Regional Influence Alignment', 'Nuclear Energy Capacity', 'Sanctions Resistance'],
+        exports: ['Crude Oil & Petrochemicals', 'Natural Gas', 'Carpets & Minerals'],
+        imports: ['Industrial Technology', 'Grains', 'Medical Supplies'],
+        allies: ['Russia', 'China', 'Regional Alliances'],
+        rivals: ['USA', 'Israel', 'Saudi Arabia'],
+        riskScore: 84,
+        lat: 35.6892, lon: 51.3890
+      },
+      {
+        id: 'iraq',
+        name: 'Iraq',
+        region: 'MIDDLE_EAST',
+        archetype: 'The Tigris Sentinel',
+        theme: 'Cradle of History & Energy Catalyst',
+        glyph: 'CHICCHAN (Serpent / Life Force)',
+        selfPerception: 'Rebirthing Heart of Mesopotamia & Energy Pillar.',
+        globalPerception: 'Vital Hydrocarbon Exporter Navigating Regional Equilibrium.',
+        coreDrivers: ['Infra Stabilization', 'Oil Export Maximization', 'Geopolitical Neutrality'],
+        exports: ['Crude Oil', 'Dates & Agricultural Products'],
+        imports: ['Refined Energy', 'Infrastructure Machinery', 'Food'],
+        allies: ['Middle East Neighbors', 'Global Energy Partners'],
+        rivals: ['Extremist Non-State Actors'],
+        riskScore: 71,
+        lat: 33.3152, lon: 44.3661
+      },
+      {
+        id: 'saudi_gulf',
+        name: 'Saudi Arabia & Gulf Council',
+        region: 'MIDDLE_EAST',
+        archetype: 'The Desert Solar Monarchs',
+        theme: 'Energy & Future Cyber-Cities (NEOM)',
+        glyph: 'OC (Dog / Loyalty & Guidance)',
+        selfPerception: 'Pillars of the Muslim World & Creators of the Post-Oil Future.',
+        globalPerception: 'Global Energy Dominators pivot-funding Global High-Tech Futures.',
+        coreDrivers: ['Vision 2030 Transformation', 'Global Energy Stability', 'AI Infrastructure Investment'],
+        exports: ['Petroleum & Petrochemicals', 'Desalination Tech', 'Sovereign Investment Capital'],
+        imports: ['Advanced Defense Systems', 'Technology Hardware', 'Luxury Goods'],
+        allies: ['USA', 'Arab Nations', 'EU', 'China'],
+        rivals: ['Iran'],
+        riskScore: 58,
+        lat: 24.7136, lon: 46.6753
+      },
+      {
+        id: 'japan',
+        name: 'Japan',
+        region: 'ASIA',
+        archetype: 'The Neon Kami',
+        theme: 'Cyber-Technocrat & Anime Ancestry',
+        glyph: 'CHUEN (Monkey / Master Craftsman)',
+        selfPerception: 'Harmonious Fusion of Sacred Traditions and Cyber-Futurism.',
+        globalPerception: 'Pinnacle of Precision Engineering, Robotics, and Pop-Culture Aesthetics.',
+        coreDrivers: ['Robotics & Automation Mastery', 'Pacific Security Arc', 'Technological Elegance'],
+        exports: ['Automotives', 'Precision Electronics', 'Robotics', 'Pop Culture Media'],
+        imports: ['Fossil Fuels', 'Raw Foodstuffs', 'Rare Earth Minerals'],
+        allies: ['USA', 'Australia', 'EU', 'India'],
+        rivals: ['Regional Cyber Competitors'],
+        riskScore: 32,
+        lat: 35.6762, lon: 139.6503
+      },
+      {
+        id: 'china',
+        name: 'China',
+        region: 'ASIA',
+        archetype: 'The Jade Dragon',
+        theme: 'Supply Chain & Manufacturing Titan',
+        glyph: 'MULUC (Water / Universal Flow)',
+        selfPerception: 'Reclaimed Middle Kingdom leading the World toward Multipolarity.',
+        globalPerception: 'Industrial & AI Superpower controlling core global supply chains.',
+        coreDrivers: ['Manufacturing Monopoly', 'Belt and Road Logistics', 'AI & Green Tech Lead'],
+        exports: ['Solar Tech', 'EVs', 'Electronics', 'Heavy Industrial Equipment'],
+        imports: ['Crude Oil', 'Iron Ore & Copper', 'Semiconductor Machinery'],
+        allies: ['Russia', 'Global South', 'Iran'],
+        rivals: ['USA', 'Japan', 'India'],
+        riskScore: 65,
+        lat: 39.9042, lon: 116.4074
+      },
+      {
+        id: 'india',
+        name: 'India',
+        region: 'ASIA',
+        archetype: 'The Vedic Algorithm',
+        theme: 'Software Engine & Non-Aligned Power',
+        glyph: 'IK (Wind / Cosmic Intelligence)',
+        selfPerception: 'Ancient Civilization State leading the Global South via Digital Infra.',
+        globalPerception: 'Demographic Powerhouse & Global IT Software Headquarters.',
+        coreDrivers: ['Digital Public Infrastructure', 'Non-Aligned Strategic Autonomy', 'Economic Expansion'],
+        exports: ['Software & IT Services', 'Pharmaceuticals', 'Refined Fuels', 'Textiles'],
+        imports: ['Crude Oil', 'Gold', 'Electronics', 'Defense Systems'],
+        allies: ['USA', 'Russia', 'Japan', 'Global South'],
+        rivals: ['Border Competitors'],
+        riskScore: 49,
+        lat: 28.6139, lon: 77.2090
+      },
+      {
+        id: 'australia',
+        name: 'Australia',
+        region: 'ASIA',
+        archetype: 'The Southern Eclipse',
+        theme: 'Mineral & Maritime Watcher',
+        glyph: 'AKBAL (Night / Inner Sanctuary)',
+        selfPerception: 'Resilient Island-Continent and Pacific Anchor.',
+        globalPerception: 'Indispensable Critical Minerals Repository for Clean Energy.',
+        coreDrivers: ['Critical Minerals Security', 'AUKUS Naval Security', 'Indo-Pacific Balance'],
+        exports: ['Iron Ore', 'Lithium', 'LNG', 'Coal', 'Agriculture'],
+        imports: ['Vehicles', 'Refined Fuel', 'Electronics'],
+        allies: ['USA', 'UK', 'Japan'],
+        rivals: ['Trade Disruption'],
+        riskScore: 31,
+        lat: -35.2809, lon: 149.1300
+      },
+      {
+        id: 'africa',
+        name: 'Pan-African Federation / Nig / SA',
+        region: 'AFRICA',
+        archetype: 'The Solar Sunbird',
+        theme: 'Demographic Engine & Mineral Powerhouse',
+        glyph: 'LAMAT (Star / Solar Light)',
+        selfPerception: 'Vibrant Youth-Driven Crucible of Tomorrow’s Global Growth.',
+        globalPerception: 'Future Economic Frontier containing Key Strategic Battery Minerals.',
+        coreDrivers: ['Youth Tech Entrepreneurship', 'Continental Free Trade (AfCFTA)', 'Mineral Value Addition'],
+        exports: ['Gold', 'Diamonds', 'Cobalt & Platinum', 'Crude Oil', 'Agricultural Cash Crops'],
+        imports: ['Processed Foods', 'Machinery', 'Consumer Electronics'],
+        allies: ['Global South', 'EU', 'China', 'USA'],
+        rivals: ['Resource Extraction Exploitation'],
+        riskScore: 54,
+        lat: 9.0820, lon: 8.6753
+      },
+      {
+        id: 'russia',
+        name: 'Russia',
+        region: 'EURASIA',
+        archetype: 'The Frozen Bear',
+        theme: 'Energy Vault & Strategic Cyber-Shield',
+        glyph: 'ETZNAB (Flint / Hard Reality)',
+        selfPerception: 'Unconquerable Eurasian Fortress resisting Western Unipolarity.',
+        globalPerception: 'Nuclear & Resource Powerhouse driving multipolar realignments.',
+        coreDrivers: ['Eurasian Heartland Security', 'Energy & Grain Dominance', 'Asymmetric Warfare'],
+        exports: ['Crude Oil & Gas', 'Wheat & Agriculture', 'Fertilizers', 'Metals & Defense Tech'],
+        imports: ['Consumer Electronics', 'Industrial Machinery', 'Automotive Components'],
+        allies: ['China', 'Iran', 'Belarus'],
+        rivals: ['USA', 'EU', 'NATO'],
+        riskScore: 85,
+        lat: 55.7558, lon: 37.6173
+      }
+    ];
+
+    // --- INITIALIZATION ---
+    let currentTab = 'globe';
+    let globeScene, globeCamera, globeRenderer, globeSphere, globeGroup;
+    let isRotating = true;
+    let selectedNation = null;
+
+    window.onload = function() {
+      // Start UTC Clock
+      updateClock();
+      setInterval(updateClock, 1000);
+
+      // Render default Nation Codex Grid
+      renderNationCodex('ALL');
+
+      // Init 3D Globe
+      init3DGlobe();
+
+      // Init Evidence Table
+      renderEvidenceTable('ALL');
+
+      // Init Town Hall Threads
+      renderTownHall();
+
+      // Init Canvases
+      initYaxcheCanvas();
+      initTzolkinCanvas();
+      initForecastChart();
+
+      // Window Resize Listener
+      window.addEventListener('resize', onWindowResize);
+    };
+
+    function updateClock() {
+      const now = new Date();
+      document.getElementById('liveClock').innerText = now.toUTCString().replace('GMT', 'UTC');
+    }
+
+    // --- TAB NAVIGATION ---
+    function switchTab(tabId) {
+      currentTab = tabId;
+      const views = ['globe', 'codex', 'scenarios', 'calendar', 'evidence', 'townhall', 'forecast'];
+      
+      views.forEach(v => {
+        document.getElementById(`view-${v}`).classList.add('hidden');
+        const tabBtn = document.getElementById(`tab-${v}`);
+        if (tabBtn) {
+          tabBtn.classList.remove('border-goldGlyph', 'text-goldGlow', 'font-semibold');
+          tabBtn.classList.add('border-transparent');
+        }
+      });
+
+      document.getElementById(`view-${tabId}`).classList.remove('hidden');
+      const activeBtn = document.getElementById(`tab-${tabId}`);
+      if (activeBtn) {
+        activeBtn.classList.add('border-goldGlyph', 'text-goldGlow', 'font-semibold');
+        activeBtn.classList.remove('border-transparent');
+      }
+
+      // Re-trigger Canvas redraws on view switch
+      if (tabId === 'scenarios') setTimeout(initYaxcheCanvas, 100);
+      if (tabId === 'calendar') setTimeout(initTzolkinCanvas, 100);
+      if (tabId === 'forecast') setTimeout(initForecastChart, 100);
+    }
+
+    // --- 3D THREE.JS GLOBE ENGINE ---
+    function init3DGlobe() {
+      const container = document.getElementById('globeContainer');
+      const width = container.clientWidth;
+      const height = container.clientHeight;
+
+      globeScene = new THREE.Scene();
+      globeCamera = new THREE.PerspectiveCamera(45, width / height, 0.1, 1000);
+      globeCamera.position.z = 280;
+
+      globeRenderer = new THREE.WebGLRenderer({ antialias: true, alpha: true });
+      globeRenderer.setSize(width, height);
+      globeRenderer.setPixelRatio(window.devicePixelRatio);
+      container.appendChild(globeRenderer.domElement);
+
+      globeGroup = new THREE.Group();
+      globeScene.add(globeGroup);
+
+      // Base Obsidian Globe Sphere
+      const geometry = new THREE.SphereGeometry(80, 64, 64);
+      const material = new THREE.MeshPhongMaterial({
+        color: 0x111317,
+        emissive: 0x07080a,
+        wireframe: false,
+        shininess: 25
+      });
+      globeSphere = new THREE.Mesh(geometry, material);
+      globeGroup.add(globeSphere);
+
+      // Golden Latitude / Longitude Wireframe Grid
+      const wireGeo = new THREE.SphereGeometry(80.5, 32, 16);
+      const wireMat = new THREE.MeshBasicMaterial({
+        color: 0xC5A15B,
+        wireframe: true,
+        transparent: true,
+        opacity: 0.15
+      });
+      const wireMesh = new THREE.Mesh(wireGeo, wireMat);
+      globeGroup.add(wireMesh);
+
+      // Outer Atmosphere Glow Ring
+      const atmoGeo = new THREE.SphereGeometry(86, 32, 32);
+      const atmoMat = new THREE.MeshBasicMaterial({
+        color: 0x00F0FF,
+        transparent: true,
+        opacity: 0.05,
+        side: THREE.BackSide
+      });
+      const atmoMesh = new THREE.Mesh(atmoGeo, atmoMat);
+      globeGroup.add(atmoMesh);
+
+      // Lighting
+      const ambientLight = new THREE.AmbientLight(0xffffff, 0.6);
+      globeScene.add(ambientLight);
+
+      const dirLight = new THREE.DirectionalLight(0xC5A15B, 1.2);
+      dirLight.position.set(200, 100, 150);
+      globeScene.add(dirLight);
+
+      // Add Pins/Nodes for Nations
+      NATIONS_DATA.forEach(nation => {
+        addNationMarker(nation);
+      });
+
+      // Add Sample Escalation Arcs
+      addThreatArc(38.89, -77.03, 35.68, 139.65, 0x00F0FF); // USA to Japan
+      addThreatArc(31.76, 35.21, 35.68, 51.38, 0xFF2A54);  // Israel to Iran
+      addThreatArc(50.85, 4.35, 55.75, 37.61, 0xFFB000);   // EU to Russia
+
+      // Mouse Drag Controls
+      let isDragging = false;
+      let previousMousePosition = { x: 0, y: 0 };
+
+      container.addEventListener('mousedown', e => {
+        isDragging = true;
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+
+      container.addEventListener('mousemove', e => {
+        if (!isDragging) return;
+        const deltaMove = {
+          x: e.clientX - previousMousePosition.x,
+          y: e.clientY - previousMousePosition.y
+        };
+
+        globeGroup.rotation.y += deltaMove.x * 0.005;
+        globeGroup.rotation.x += deltaMove.y * 0.005;
+
+        previousMousePosition = { x: e.clientX, y: e.clientY };
+      });
+
+      window.addEventListener('mouseup', () => { isDragging = false; });
+
+      // Touch handling
+      container.addEventListener('touchstart', e => {
+        if (e.touches.length === 1) {
+          isDragging = true;
+          previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+        }
+      });
+      container.addEventListener('touchmove', e => {
+        if (!isDragging || e.touches.length !== 1) return;
+        const deltaMove = {
+          x: e.touches[0].clientX - previousMousePosition.x,
+          y: e.touches[0].clientY - previousMousePosition.y
+        };
+        globeGroup.rotation.y += deltaMove.x * 0.005;
+        globeGroup.rotation.x += deltaMove.y * 0.005;
+        previousMousePosition = { x: e.touches[0].clientX, y: e.touches[0].clientY };
+      });
+      container.addEventListener('touchend', () => { isDragging = false; });
+
+      // Start Animation Loop
+      animateGlobe();
+    }
+
+    function latLonToVector3(lat, lon, radius) {
+      const phi = (90 - lat) * (Math.PI / 180);
+      const theta = (lon + 180) * (Math.PI / 180);
+      const x = -(radius * Math.sin(phi) * Math.cos(theta));
+      const z = (radius * Math.sin(phi) * Math.sin(theta));
+      const y = (radius * Math.cos(phi));
+      return new THREE.Vector3(x, y, z);
+    }
+
+    function addNationMarker(nation) {
+      const pos = latLonToVector3(nation.lat, nation.lon, 81);
+      
+      let color = 0x00F0FF; // Stable
+      if (nation.riskScore > 75) color = 0xFF2A54; // High Risk
+      else if (nation.riskScore > 50) color = 0xFFB000; // Moderate
+
+      const nodeGeo = new THREE.SphereGeometry(1.8, 16, 16);
+      const nodeMat = new THREE.MeshBasicMaterial({ color: color });
+      const nodeMesh = new THREE.Mesh(nodeGeo, nodeMat);
+      nodeMesh.position.copy(pos);
+      nodeMesh.userData = nation;
+
+      globeGroup.add(nodeMesh);
+    }
+
+    function addThreatArc(lat1, lon1, lat2, lon2, colorHex) {
+      const p1 = latLonToVector3(lat1, lon1, 81);
+      const p2 = latLonToVector3(lat2, lon2, 81);
+
+      // Midpoint pulled outward
+      const mid = p1.clone().add(p2).multiplyScalar(0.5);
+      const dist = p1.distanceTo(p2);
+      mid.normalize().multiplyScalar(81 + dist * 0.25);
+
+      const curve = new THREE.QuadraticBezierCurve3(p1, mid, p2);
+      const points = curve.getPoints(40);
+      const curveGeo = new THREE.BufferGeometry().setFromPoints(points);
+
+      const curveMat = new THREE.LineBasicMaterial({
+        color: colorHex,
+        transparent: true,
+        opacity: 0.75,
+        linewidth: 2
+      });
+
+      const line = new THREE.Line(curveGeo, curveMat);
+      globeGroup.add(line);
+    }
+
+    function animateGlobe() {
+      requestAnimationFrame(animateGlobe);
+
+      if (isRotating && globeGroup) {
+        // Natural counter-clockwise rotation (West to East)
+        globeGroup.rotation.y += 0.0015;
+      }
+
+      if (globeRenderer && globeScene && globeCamera) {
+        globeRenderer.render(globeScene, globeCamera);
+      }
+    }
+
+    function toggleRotation() {
+      isRotating = !isRotating;
+      document.getElementById('rotBtn').innerHTML = isRotating 
+        ? '<i class="fa-solid fa-pause mr-1"></i> Pause Spin' 
+        : '<i class="fa-solid fa-play mr-1"></i> Resume Spin';
+    }
+
+    function resetGlobeCamera() {
+      if (globeGroup) {
+        globeGroup.rotation.set(0, 0, 0);
+      }
+    }
+
+    // --- CODEX OF NATIONS RENDERER ---
+    function renderNationCodex(filterRegion) {
+      const grid = document.getElementById('nationsGrid');
+      grid.innerHTML = '';
+
+      const filtered = filterRegion === 'ALL' 
+        ? NATIONS_DATA 
+        : NATIONS_DATA.filter(n => n.region === filterRegion);
+
+      filtered.forEach(nation => {
+        let riskColorClass = 'text-neonCyan border-neonCyan/30 bg-neonCyan/10';
+        if (nation.riskScore > 75) riskColorClass = 'text-neonCrimson border-neonCrimson/30 bg-neonCrimson/10';
+        else if (nation.riskScore > 50) riskColorClass = 'text-neonAmber border-neonAmber/30 bg-neonAmber/10';
+
+        const card = document.createElement('div');
+        card.className = 'bg-stoneDark/90 border border-goldGlyph/30 rounded-xl p-5 space-y-4 hover:border-goldGlyph transition relative overflow-hidden';
+        
+        card.innerHTML = `
+          <div class="flex items-start justify-between border-b border-goldGlyph/20 pb-3">
+            <div>
+              <span class="text-[10px] font-tech text-goldGlyph uppercase tracking-widest block">${nation.archetype}</span>
+              <h3 class="font-cinzel font-bold text-base text-parchment">${nation.name}</h3>
+            </div>
+            <span class="text-xs font-tech px-2.5 py-1 rounded border ${riskColorClass} font-bold">
+              Risk: ${nation.riskScore}
+            </span>
+          </div>
+
+          <div class="text-xs font-tech space-y-2">
+            <div>
+              <span class="text-goldGlyph/80 font-semibold block">Aesthetic & Archetype:</span>
+              <p class="text-parchment/80">${nation.theme}</p>
+            </div>
+
+            <div>
+              <span class="text-goldGlyph/80 font-semibold block">Maya Glyph Alignment:</span>
+              <p class="text-neonCyan font-mono">${nation.glyph}</p>
+            </div>
+
+            <div class="grid grid-cols-2 gap-2 pt-1">
+              <div class="bg-obsidian/60 p-2 rounded border border-goldGlyph/10">
+                <span class="text-[10px] text-parchment/50 block">Self-Perception</span>
+                <p class="text-[11px] text-parchment/90">${nation.selfPerception}</p>
+              </div>
+              <div class="bg-obsidian/60 p-2 rounded border border-goldGlyph/10">
+                <span class="text-[10px] text-parchment/50 block">Global Perception</span>
+                <p class="text-[11px] text-parchment/90">${nation.globalPerception}</p>
+              </div>
+            </div>
+
+            <div class="pt-2">
+              <span class="text-goldGlyph/80 font-semibold block">Core Drivers:</span>
+              <div class="flex flex-wrap gap-1 mt-1">
+                ${nation.coreDrivers.map(d => `<span class="bg-stonePanel text-[10px] px-2 py-0.5 rounded border border-goldGlyph/20 text-parchment/80">${d}</span>`).join('')}
+              </div>
+            </div>
+
+            <div class="pt-2 grid grid-cols-2 gap-2 text-[11px]">
+              <div>
+                <span class="text-neonEmerald font-semibold block">Key Exports:</span>
+                <p class="text-parchment/70">${nation.exports.join(', ')}</p>
+              </div>
+              <div>
+                <span class="text-neonAmber font-semibold block">Key Imports:</span>
+                <p class="text-parchment/70">${nation.imports.join(', ')}</p>
+              </div>
+            </div>
+          </div>
+        `;
+        grid.appendChild(card);
+      });
+    }
+
+    function filterCodex(region) {
+      renderNationCodex(region);
+      const buttons = document.querySelectorAll('#regionFilters button');
+      buttons.forEach(btn => {
+        btn.classList.remove('bg-goldGlyph', 'text-obsidian');
+        btn.classList.add('bg-stonePanel', 'text-parchment');
+      });
+      event.target.classList.remove('bg-stonePanel', 'text-parchment');
+      event.target.classList.add('bg-goldGlyph', 'text-obsidian');
+    }
+
+    // --- YAXCHE WORLD TREE CANVAS ---
+    function initYaxcheCanvas() {
+      const canvas = document.getElementById('yaxcheCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      const rootX = canvas.width / 2;
+      const rootY = canvas.height - 60;
+
+      // Draw Tree Trunk
+      ctx.strokeStyle = '#C5A15B';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(rootX, rootY);
+      ctx.lineTo(rootX, rootY - 140);
+      ctx.stroke();
+
+      // Branch Nodes
+      const nodes = [
+        { name: 'Root Present (Kin 148)', x: rootX, y: rootY - 140, prob: '100%', color: '#C5A15B' },
+        { name: 'Branch A: Diplomatic Resolution', x: rootX - 180, y: rootY - 260, prob: '42%', color: '#00FF9D' },
+        { name: 'Branch B: Regional Conflict Escalation', x: rootX - 60, y: rootY - 280, prob: '24%', color: '#FF2A54' },
+        { name: 'Branch C: Global Economic Transition', x: rootX + 60, y: rootY - 280, prob: '18%', color: '#FFB000' },
+        { name: 'Branch D: Technological Breakthrough', x: rootX + 180, y: rootY - 260, prob: '9%', color: '#00F0FF' }
+      ];
+
+      // Connect Root to Branches
+      nodes.slice(1).forEach(node => {
+        ctx.strokeStyle = node.color;
+        ctx.lineWidth = 2;
+        ctx.beginPath();
+        ctx.moveTo(rootX, rootY - 140);
+        ctx.quadraticCurveTo(rootX, rootY - 200, node.x, node.y);
+        ctx.stroke();
+      });
+
+      // Draw Node Circles & Labels
+      nodes.forEach(node => {
+        ctx.fillStyle = node.color;
+        ctx.beginPath();
+        ctx.arc(node.x, node.y, 8, 0, Math.PI * 2);
+        ctx.fill();
+
+        ctx.fillStyle = '#F0E0CE';
+        ctx.font = '11px Space Grotesk';
+        ctx.textAlign = 'center';
+        ctx.fillText(`${node.name} (${node.prob})`, node.x, node.y - 14);
+      });
+    }
+
+    // --- TZOL'KIN CALENDAR WHEEL CANVAS ---
+    function initTzolkinCanvas() {
+      const canvas = document.getElementById('tzolkinCanvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+
+      const centerX = canvas.width / 2;
+      const centerY = canvas.height / 2;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Outer Ring
+      ctx.strokeStyle = '#C5A15B';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 140, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Inner Ring
+      ctx.strokeStyle = '#00F0FF';
+      ctx.lineWidth = 2;
+      ctx.beginPath();
+      ctx.arc(centerX, centerY, 90, 0, Math.PI * 2);
+      ctx.stroke();
+
+      // Center Eye Symbol
+      ctx.fillStyle = '#E5C178';
+      ctx.font = '24px Cinzel Decorative';
+      ctx.textAlign = 'center';
+      ctx.textBaseline = 'middle';
+      ctx.fillText('👁', centerX, centerY);
+
+      // Glyphs Spoke Marks
+      for (let i = 0; i < 20; i++) {
+        const angle = (i * Math.PI) / 10;
+        const x1 = centerX + Math.cos(angle) * 125;
+        const y1 = centerY + Math.sin(angle) * 125;
+        const x2 = centerX + Math.cos(angle) * 140;
+        const y2 = centerY + Math.sin(angle) * 140;
+
+        ctx.strokeStyle = '#C5A15B';
+        ctx.lineWidth = 1.5;
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.stroke();
+      }
+    }
+
+    // --- EVIDENCE LEDGER LOGIC ---
+    const EVIDENCE_DATA = [
+      { id: 'EVD-101', type: 'Observation', title: 'Middle East Maritime Route Cargo Shift', region: 'Middle East', score: '94%', status: 'Verified' },
+      { id: 'EVD-102', type: 'Hypothesis', title: 'Nordic Cyber Grid Expansion Sync', region: 'Europe', score: '78%', status: 'In Review' },
+      { id: 'EVD-103', type: 'Observation', title: 'Lithium Triangle Export Agreement', region: 'LatAm', score: '88%', status: 'Verified' },
+      { id: 'EVD-104', type: 'Hypothesis', title: 'AI Infrastructure Sovereign Capital Reallocation', region: 'Global', score: '82%', status: 'In Review' }
+    ];
+
+    function renderEvidenceTable(filter) {
+      const tbody = document.getElementById('evidenceTableBody');
+      tbody.innerHTML = '';
+
+      const items = filter === 'ALL' ? EVIDENCE_DATA : EVIDENCE_DATA.filter(e => e.type === filter);
+
+      items.forEach(e => {
+        const tr = document.createElement('tr');
+        tr.className = 'hover:bg-goldGlyph/5 transition';
+        tr.innerHTML = `
+          <td class="p-3 font-mono text-goldGlow">${e.id}</td>
+          <td class="p-3"><span class="px-2 py-0.5 rounded text-[10px] bg-stonePanel border border-goldGlyph/30">${e.type}</span></td>
+          <td class="p-3 text-parchment font-semibold">${e.title}</td>
+          <td class="p-3 text-parchment/70">${e.region}</td>
+          <td class="p-3 text-neonCyan font-bold">${e.score}</td>
+          <td class="p-3"><span class="text-neonEmerald">${e.status}</span></td>
+        `;
+        tbody.appendChild(tr);
+      });
+    }
+
+    function filterEvidence(type) {
+      renderEvidenceTable(type);
+    }
+
+    // --- TOWN HALL ASSEMBLY ---
+    let townHallThreads = [
+      {
+        author: 'Kurisutina_99',
+        avatar: '🧪',
+        title: 'Timeline Convergence in Middle East Trade Corridors',
+        body: 'Cross-referencing Steins;Gate worldline variance models with current shipping flows suggests high convergence stability.',
+        votes: 34
+      },
+      {
+        author: 'Major_Kusanagi',
+        avatar: '🤖',
+        title: 'Cyber-Physical Resilience in Nordics & Asia',
+        body: 'Ghost in the Shell cyber-brain protocol analysis indicates high defense integrity across Baltic & Pacific nodes.',
+        votes: 52
+      }
+    ];
+
+    function renderTownHall() {
+      const container = document.getElementById('townhallThreads');
+      container.innerHTML = '';
+
+      townHallThreads.forEach((t, index) => {
+        const div = document.createElement('div');
+        div.className = 'bg-obsidian/80 border border-goldGlyph/30 rounded-lg p-4 space-y-2 font-tech';
+        div.innerHTML = `
+          <div class="flex items-center justify-between text-xs border-b border-goldGlyph/15 pb-2">
+            <div class="flex items-center space-x-2">
+              <span class="text-lg">${t.avatar}</span>
+              <span class="text-goldGlow font-bold">${t.author}</span>
+            </div>
+            <button onclick="upvoteThread(${index})" class="text-xs bg-stonePanel hover:bg-goldGlyph/20 border border-goldGlyph/30 px-2.5 py-1 rounded text-parchment transition">
+              <i class="fa-solid fa-arrow-up text-neonEmerald mr-1"></i> ${t.votes}
+            </button>
+          </div>
+          <h4 class="font-cinzel font-bold text-sm text-parchment">${t.title}</h4>
+          <p class="text-xs text-parchment/80 leading-relaxed">${t.body}</p>
+        `;
+        container.appendChild(div);
+      });
+    }
+
+    function upvoteThread(index) {
+      townHallThreads[index].votes++;
+      renderTownHall();
+    }
+
+    function addTownHallTopic() {
+      const title = document.getElementById('newThreadTitle').value;
+      const body = document.getElementById('newThreadBody').value;
+
+      if (!title || !body) return;
+
+      townHallThreads.unshift({
+        author: 'Analyst_Node_5789',
+        avatar: '👁',
+        title: title,
+        body: body,
+        votes: 1
+      });
+
+      document.getElementById('newThreadTitle').value = '';
+      document.getElementById('newThreadBody').value = '';
+
+      renderTownHall();
+    }
+
+    // --- FORECAST REVIEW CANVAS CHART ---
+    function initForecastChart() {
+      const canvas = document.getElementById('forecastChart');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const rect = canvas.parentElement.getBoundingClientRect();
+      canvas.width = rect.width;
+      canvas.height = rect.height;
+
+      ctx.clearRect(0, 0, canvas.width, canvas.height);
+
+      // Line chart plot points
+      const points = [
+        { x: 30, y: canvas.height - 40 },
+        { x: 100, y: canvas.height - 70 },
+        { x: 170, y: canvas.height - 50 },
+        { x: 240, y: canvas.height - 110 },
+        { x: 310, y: canvas.height - 90 },
+        { x: 380, y: canvas.height - 150 }
+      ];
+
+      // Draw Grid Lines
+      ctx.strokeStyle = 'rgba(197, 161, 91, 0.1)';
+      ctx.lineWidth = 1;
+      for (let y = 20; y < canvas.height; y += 40) {
+        ctx.beginPath();
+        ctx.moveTo(0, y);
+        ctx.lineTo(canvas.width, y);
+        ctx.stroke();
+      }
+
+      // Draw Trend Line
+      ctx.strokeStyle = '#00F0FF';
+      ctx.lineWidth = 3;
+      ctx.beginPath();
+      ctx.moveTo(points[0].x, points[0].y);
+      for (let i = 1; i < points.length; i++) {
+        ctx.lineTo(points[i].x, points[i].y);
+      }
+      ctx.stroke();
+
+      // Points
+      points.forEach(p => {
+        ctx.fillStyle = '#FFB000';
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, 5, 0, Math.PI * 2);
+        ctx.fill();
+      });
+    }
+
+    // --- RESIZE LISTENER ---
+    function onWindowResize() {
+      if (globeCamera && globeRenderer && document.getElementById('globeContainer')) {
+        const container = document.getElementById('globeContainer');
+        globeCamera.aspect = container.clientWidth / container.clientHeight;
+        globeCamera.updateProjectionMatrix();
+        globeRenderer.setSize(container.clientWidth, container.clientHeight);
+      }
+
+      if (currentTab === 'scenarios') initYaxcheCanvas();
+      if (currentTab === 'calendar') initTzolkinCanvas();
+      if (currentTab === 'forecast') initForecastChart();
+    }
+  </script>
+</body>
+</html>
+```
