@@ -1,0 +1,14 @@
+
+---
+
+### How to Upload to GitHub:
+1. Create a new repository on GitHub named `enigma5789-master`.
+2. Save the files above into a local folder on your computer.
+3. Open your terminal or command line in that folder and run:
+   ```bash
+   git init
+   git add .
+   git commit -m "Initial commit: Enigma 5789 + Jimmy AI Master Engine"
+   git branch -M main
+   git remote add origin https://github.com/YOUR-USERNAME/enigma5789-master.git
+   git push -u origin main
