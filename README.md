@@ -1,4 +1,4 @@
-# Enigma5789-Evidence
+ENIGMA 5789 + JIMMY AI
 # ENIGMA 5789 + JIMMY AI: Codex of Nations Engine
 
 An advanced geopolitical intelligence platform and multi-model forecast engine integrating ancient Maya temporal cycle dynamics, deep neural hazard modeling, and anime/manga sci-fi nation archetypes.
